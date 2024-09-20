@@ -1,4 +1,3 @@
-package v1;
 /**
  * Classe Game - le moteur du jeu d'aventure Zuul.
  *
@@ -16,17 +15,24 @@ public class Game
     }
     
     private void createRooms(){
-        Room vOutside = new Room("outside the main entrance of the university");
-        Room vTheatre = new Room("in a lecture theatre");
-        Room vPub = new Room("in the campus pub");
-        Room vLab = new Room("in a computing lab");
-        Room vOffice = new Room("in the computing admin office");
-        
-        vOutside.setExits(vTheatre,vPub,vLab,null);
-        vTheatre.setExits(null,vOutside,null,null);
-        vPub.setExits(vOutside,null,null,null);
-        vLab.setExits(vOffice,null,null,vOutside);
-        vOffice.setExits(null,vLab,null,null);
+        Room vOutside = new Room("standing outside the secret laboratory, the entrance looming ahead with an air of mystery and danger.");
+        Room vStorage = new Room("in a cluttered storage room, filled with various discarded objects and tools, some of which might be useful for your mission.");
+        Room vClean = new Room("in the clean room, a sterile area where disinfection and changing take place. The air smells faintly of chemicals, and a row of lockers lines the wall.");
+        Room vMeeting = new Room("in the meeting room, where scientists plan their experiments. A large table and chairs dominate the space, and diagrams cover the walls.");
+        Room vPrison = new Room("in the prison room, where human subjects are held in confinement. The air feels heavy with tension, and cold metal cages line the walls.");
+        Room vAnimal = new Room("in the animal room, a dark, isolated space where animals, transformed by experiments, are kept in cages. The room is eerily quiet.");
+        Room vArchive = new Room(" in the archive room, a library-like space filled with shelves of files and records. Each document holds secrets about the experiments conducted here.");
+        Room vExperimentation = new Room("in the experimentation room, where the darkest of the laboratory's procedures are carried out. Surgical beds and strange equipment fill the space.");
+        Room vAleatoire = vAnimal; //random room, pas encore fait
+
+        vOutside.setExits(null,null,vStorage,null);
+        vStorage.setExits(null,null,vClean,vOutside);
+        vClean.setExits(null,vMeeting,vAleatoire,vStorage);
+        vMeeting.setExits(vClean,vArchive,vPrison,vAnimal);
+        vPrison.setExits(null,null,null,vMeeting);
+        vAnimal.setExits(null,vExperimentation,vMeeting,null);
+        vArchive.setExits(vMeeting,null,null,vExperimentation);
+        vExperimentation.setExits(vAnimal,null,vArchive,null);
         
         this.aCurrentRoom=vOutside;
     }
