@@ -23,10 +23,10 @@ public class Room
     
     public Room getExit(String pDirection){
         if(pDirection.equals("east")) return this.aEastExit;
-        if(pDirection.equals("west")) return this.aWestExit;
-        if(pDirection.equals("south")) return this.aSouthExit;
-        if(pDirection.equals("north")) return this.aNorthExit;
-        return UNKNOWN_DIRECTION;
+        else if(pDirection.equals("west")) return this.aWestExit;
+        else if(pDirection.equals("south")) return this.aSouthExit;
+        else if(pDirection.equals("north")) return this.aNorthExit;
+        else return UNKNOWN_DIRECTION;
     }
     
     public void setExits(
@@ -38,5 +38,18 @@ public class Room
             this.aWestExit=pWest;
             this.aSouthExit=pSouth;
             this.aNorthExit=pNorth;
-        }
-    } // Room
+    }
+    
+    public String getExitString(){
+        String vString="Exits: ";
+        if (this.aEastExit!= null)
+            vString=vString+"east ";
+        if (this.aWestExit != null)
+            vString=vString+"west ";
+        if (this.aSouthExit != null)
+            vString=vString+"south ";
+        if (this.aNorthExit != null)
+            vString=vString+"north ";
+        return vString;
+    }    
+} // Room

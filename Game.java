@@ -15,21 +15,21 @@ public class Game {
 
     private void createRooms() {
         Room vOutside = new Room(
-                "standing outside the secret laboratory, the entrance looming ahead with an air of mystery and danger.");
+                "standing outside the secret laboratory, \nthe entrance looming ahead with an air of mystery and danger.");
         Room vStorage = new Room(
-                "in a cluttered storage room, filled with various discarded objects and tools, some of which might be useful for your mission.");
+                "in a cluttered storage room, \nfilled with various discarded objects and tools, \nsome of which might be useful for your mission.");
         Room vClean = new Room(
-                "in the clean room, a sterile area where disinfection and changing take place. The air smells faintly of chemicals, and a row of lockers lines the wall.");
+                "in the clean room, \na sterile area where disinfection and changing take place. \nThe air smells faintly of chemicals, \nand a row of lockers lines the wall.");
         Room vMeeting = new Room(
-                "in the meeting room, where scientists plan their experiments. A large table and chairs dominate the space, and diagrams cover the walls.");
+                "in the meeting room, \nwhere scientists plan their experiments. \nA large table and chairs dominate the space, \nand diagrams cover the walls.");
         Room vPrison = new Room(
-                "in the prison room, where human subjects are held in confinement. The air feels heavy with tension, and cold metal cages line the walls.");
+                "in the prison room, \nwhere human subjects are held in confinement. \nThe air feels heavy with tension, \nand cold metal cages line the walls.");
         Room vAnimal = new Room(
-                "in the animal room, a dark, isolated space where animals, transformed by experiments, are kept in cages. The room is eerily quiet.");
+                "in the animal room, a dark, isolated space \nwhere animals, transformed by experiments, are kept in cages. \nThe room is eerily quiet.");
         Room vArchive = new Room(
-                " in the archive room, a library-like space filled with shelves of files and records. Each document holds secrets about the experiments conducted here.");
+                " in the archive room, a library-like space \nfilled with shelves of files and records. \nEach document holds secrets about the experiments conducted here.");
         Room vExperimentation = new Room(
-                "in the experimentation room, where the darkest of the laboratory's procedures are carried out. Surgical beds and strange equipment fill the space.");
+                "in the experimentation room, \nwhere the darkest of the laboratory's procedures are carried out. \nSurgical beds and strange equipment fill the space.");
         Room vAleatoire = vAnimal; // random room, pas encore fait
 
         vOutside.setExits(null, null, vStorage, null);
@@ -65,29 +65,21 @@ public class Game {
 
     private void printLocationInfo() {
         System.out.println("You are " + this.aCurrentRoom.getDescription());
-        System.out.print("Exits: ");
-        if (this.aCurrentRoom.getExit("east") != null)
-            System.out.print("east ");
-        if (this.aCurrentRoom.getExit("west") != null)
-            System.out.print("west ");
-        if (this.aCurrentRoom.getExit("south") != null)
-            System.out.print("south ");
-        if (this.aCurrentRoom.getExit("north") != null)
-            System.out.print("north ");
+        System.out.print(this.aCurrentRoom.getExitString());
         System.out.println();
     }
 
     private void printWelcome() {
-        System.out.println("Welcome to the World of Zuul!" + "\n"
-                + "World of Zuul is a new, incredibly boring adventure game." + "\n"
+        System.out.println("Welcome to the World of Zuul!\n"
+                + "World of Zuul is a new, incredibly boring adventure game.\n"
                 + "Type 'help' if you need help.");
         this.printLocationInfo();
     }
 
     private void printHelp() {
-        System.out.println("You are lost. You are alone." + "\n"
-                + "You wander around at the university." + "\n" + "\n"
-                + "Your command words are:" + "\n"
+        System.out.println("You are lost. You are alone.\n"
+                + "You wander around at the university.\n\n"
+                + "Your command words are:\n"
                 + "  go quit help");
     }
 
