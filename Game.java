@@ -1,18 +1,24 @@
 /**
  * Classe Game - le moteur du jeu d'aventure Zuul.
  *
- * @author votre nom
+ * @author LIN Xingtong
  */
 public class Game {
     private Room aCurrentRoom;
     private Parser aParser;
 
+    /**
+     * D�marre un nouveau Game qui interagissent avec le clavier avec les salles, sorties et position actuel par defaut.
+     */
     public Game() {
         this.createRooms();
         this.aParser = new Parser();
-        play();
+        this.play();
     }
 
+    /**
+     * Initialise position actuel et des salles du Game avec la description et sorties par defaut.
+     */
     private void createRooms() {
         Room vOutside = new Room(
                 "standing outside the secret laboratory, \nthe entrance looming ahead with an air of mystery and danger.");
@@ -32,18 +38,38 @@ public class Game {
                 "in the experimentation room, \nwhere the darkest of the laboratory's procedures are carried out. \nSurgical beds and strange equipment fill the space.");
         Room vAleatoire = vAnimal; // random room, pas encore fait
 
-        vOutside.setExits(null, null, vStorage, null);
-        vStorage.setExits(null, null, vClean, vOutside);
-        vClean.setExits(null, vMeeting, vAleatoire, vStorage);
-        vMeeting.setExits(vClean, vArchive, vPrison, vAnimal);
-        vPrison.setExits(null, null, null, vMeeting);
-        vAnimal.setExits(null, vExperimentation, vMeeting, null);
-        vArchive.setExits(vMeeting, null, null, vExperimentation);
-        vExperimentation.setExits(vAnimal, null, vArchive, null);
+        vOutside.setExits("south", vStorage);
+
+        vStorage.setExits("down", vClean);
+        vStorage.setExits("north", vOutside);
+
+        vClean.setExits("west", vMeeting);
+        vClean.setExits("south", vAleatoire);
+        vClean.setExits("up", vStorage);
+
+        vMeeting.setExits("east", vClean);
+        vMeeting.setExits("west", vArchive);
+        vMeeting.setExits("south", vPrison);
+        vMeeting.setExits("north", vAnimal);
+
+        vPrison.setExits("north", vMeeting);
+
+        vAnimal.setExits("west", vExperimentation);
+        vAnimal.setExits("south", vMeeting);
+
+        vArchive.setExits("east", vMeeting);
+        vArchive.setExits("north", vExperimentation);
+
+        vExperimentation.setExits("east", vAnimal);
+        vExperimentation.setExits("south", vArchive);
 
         this.aCurrentRoom = vOutside;
     }
 
+    /**
+     * Deplacer le joueur dans une direction donnee.
+     * @param pCmd commande de deplacement
+     */
     private void goRoom(final Command pCmd) {
         if (!pCmd.hasSecondWord()) {
             System.out.println("Go where ?");
@@ -51,10 +77,7 @@ public class Game {
         }
         String vDirection = pCmd.getSecondWord();
         Room vNextRoom = this.aCurrentRoom.getExit(vDirection);
-        if (vNextRoom == Room.UNKNOWN_DIRECTION) {
-            System.out.println("Unknown direction !");
-            return;
-        } else if(vNextRoom==null){
+        if(vNextRoom==null){
             System.out.println("There is no door !");
             this.printLocationInfo();
             return;
@@ -63,12 +86,16 @@ public class Game {
         }
     }
 
+    /**
+     * Afficher les informations localisation de salle actuel.
+     */
     private void printLocationInfo() {
-        System.out.println("You are " + this.aCurrentRoom.getDescription());
-        System.out.print(this.aCurrentRoom.getExitString());
-        System.out.println();
+        System.out.print(this.aCurrentRoom.getLongDescription());
     }
 
+    /**
+     * Afficher les informations de bienvenue et les informations de la position actuelle.
+     */
     private void printWelcome() {
         System.out.println("Welcome to the World of Zuul!\n"
                 + "World of Zuul is a new, incredibly boring adventure game.\n"
@@ -76,6 +103,9 @@ public class Game {
         this.printLocationInfo();
     }
 
+    /**
+     * Afficher les informations d'aide.
+     */
     private void printHelp() {
         System.out.println("You are lost. You are alone.\n"
                 + "You wander around at the university.\n\n"
@@ -83,6 +113,10 @@ public class Game {
                 + "  go quit help");
     }
 
+    /**
+     * Returne true si la commande est "quit", false sinon.
+     * @param pCmd commande a verifier
+     */
     private boolean quit(final Command pCmd) {
         if (pCmd.hasSecondWord()) {
             System.out.println("Quit what ?");
@@ -91,6 +125,10 @@ public class Game {
         return true;
     }
 
+    /**
+     * Traiter tous les commandes du joueur, retourner true si la commande est "quit", false sinon.
+     * @param pCmd commande a verifier
+     */
     public boolean processCommand(final Command pCmd) {
 
         Command vCmd = pCmd;
@@ -98,7 +136,7 @@ public class Game {
         if (vCmd.isUnknown()) {
             System.out.println("Erreur du programmeur : commande non reconnue !");
         } else if (vCmd.getCommandWord().equals("go")) {
-            goRoom(vCmd);
+            this.goRoom(vCmd);
         } else if (vCmd.getCommandWord().equals("quit")) {
             return this.quit(vCmd);
         } else if (vCmd.getCommandWord().equals("help")) {
@@ -109,12 +147,15 @@ public class Game {
         return false;
     }
 
+    /**
+     * Procédure pour jouer le jeu avec les commandes du joueur.
+     */
     private void play() {
         boolean vFinished = false;
-        printWelcome();
+        this.printWelcome();
         while (!vFinished) {
             Command vCmd = this.aParser.getCommand();
-            vFinished = processCommand(vCmd);
+            vFinished = this.processCommand(vCmd);
         }
         System.out.println("Thank you for playing.  Good bye.");
     }

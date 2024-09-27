@@ -1,55 +1,65 @@
+import java.util.HashMap;
+// import java.util.Set;
+// import java.util.Iterator;
+
 /**
  * Classe Room - un lieu du jeu d'aventure Zuul.
  *
- * @author votre nom
+ * @author LIN Xingtong
  */
 public class Room
 {
     private String aDescription;
-    private Room aEastExit;
-    private Room aWestExit;
-    private Room aSouthExit;
-    private Room aNorthExit;
-    public static final Room UNKNOWN_DIRECTION = new Room( "nowhere" );
-    // a dmd si ca c un attribut faut ajout a au debut
+    private HashMap<String, Room> aExits;
     
+    /**
+     * Cree une nouveau salle avec la description et aExits par defaut.
+     * @param pDescription description souhaitee pour cette salle
+     */
     public Room (final String pDescription) {
         this.aDescription=pDescription;
+        this.aExits = new HashMap<String, Room>();
     }
     
+    /**
+     * Retourne la description de la salle.
+     */
     public String getDescription(){
         return this.aDescription;
     }
     
-    public Room getExit(String pDirection){
-        if(pDirection.equals("east")) return this.aEastExit;
-        else if(pDirection.equals("west")) return this.aWestExit;
-        else if(pDirection.equals("south")) return this.aSouthExit;
-        else if(pDirection.equals("north")) return this.aNorthExit;
-        else return UNKNOWN_DIRECTION;
+    /**
+     * Retourne la sortie de la salle selon la direction saisie.
+     * @param pDirection direction souhaitee pour retourner la sortie
+     */
+    public Room getExit(final String pDirection){
+        return this.aExits.get(pDirection);
     }
     
-    public void setExits(
-        final Room pEast, 
-        final Room pWest,
-        final Room pSouth, 
-        final Room pNorth){
-            this.aEastExit=pEast;
-            this.aWestExit=pWest;
-            this.aSouthExit=pSouth;
-            this.aNorthExit=pNorth;
+    /**
+     * Configure la sortie de la salle en donnant la direction et la salle correspondante.
+     * @param pDirection direction souhaitee pour configurer la sortie
+     * @param pRoom salle souhaitee pour configurer la sortie
+     */
+    public void setExits(final String pDirection, final Room pRoom){
+        this.aExits.put(pDirection,pRoom);
     }
     
+    /**
+     * Retourne tous les sortie disponibles de la salle.
+     */
     public String getExitString(){
-        String vString="Exits: ";
-        if (this.aEastExit!= null)
-            vString=vString+"east ";
-        if (this.aWestExit != null)
-            vString=vString+"west ";
-        if (this.aSouthExit != null)
-            vString=vString+"south ";
-        if (this.aNorthExit != null)
-            vString=vString+"north ";
+        String vString="Exits:";
+        for(String vDirection : this.aExits.keySet()){
+            vString+=" "+vDirection;
+        }
         return vString;
+    }    
+    
+    /**
+     * Retourne la description détaillée de la salle.
+     */
+    public String getLongDescription(){
+       return "You are " + this.aDescription + ".\n" + this.getExitString();
     }    
 } // Room
