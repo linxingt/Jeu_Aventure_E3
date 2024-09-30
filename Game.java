@@ -109,8 +109,8 @@ public class Game {
     private void printHelp() {
         System.out.println("You are lost. You are alone.\n"
                 + "You wander around at the university.\n\n"
-                + "Your command words are:\n"
-                + "  go quit help");
+                + "Your command words are:");
+        this.aParser.showCommands();
     }
 
     /**
@@ -141,6 +141,10 @@ public class Game {
             return this.quit(vCmd);
         } else if (vCmd.getCommandWord().equals("help")) {
             this.printHelp();
+        } else if (vCmd.getCommandWord().equals("look")) {
+            this.look(vCmd);
+        } else if (vCmd.getCommandWord().equals("eat")) {
+            this.eat();
         } else {
             System.out.println("I don't know what you mean...");
         }
@@ -158,5 +162,23 @@ public class Game {
             vFinished = this.processCommand(vCmd);
         }
         System.out.println("Thank you for playing.  Good bye.");
+    }
+
+    /**
+     * Afficher la description de la salle actuelle.
+     * @param pCmd
+     */
+    private void look(final Command pCmd){
+        if (pCmd.hasSecondWord()) {
+            System.out.println("I don't know how to look at something in particular yet.");
+        }
+        System.out.println(this.aCurrentRoom.getLongDescription());
+    }
+
+    /**
+     * Afficher un message par raport a l'action de manger.
+     */
+    private void eat(){
+        System.out.println("You have eaten now and you are not hungry any more.");
     }
 } // Game

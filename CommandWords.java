@@ -17,17 +17,14 @@ public class CommandWords
     // qui se contenterait d'afficher l'adresse (= la référence) de ce tableau.
     
     // a constant array that will hold all valid command words
-    private final String[] aValidCommands;
+    private static final String aValidCommands[] = {"go", "help", "quit", "look","eat"};
 
     /**
      * Constructor - initialise the command words.
      */
     public CommandWords()
     {
-        this.aValidCommands = new String[3];
-        this.aValidCommands[0] = "go";
-        this.aValidCommands[1] = "help";
-        this.aValidCommands[2] = "quit";
+        // nothing at the moment
     } // CommandWords()
 
     /**
@@ -37,13 +34,24 @@ public class CommandWords
      */
     public boolean isCommand( final String pString )
     {
-        for ( int vI=0; vI<this.aValidCommands.length; vI++ ) {
+        for ( int vI=0; vI<aValidCommands.length; vI++ ) {
             // i++ est strictement équivalent à i = i+1 
             // (exécuté à la fin de chaque tour de boucle)
-            if ( this.aValidCommands[vI].equals( pString ) )
+            if ( aValidCommands[vI].equals( pString ) )
                 return true;
         } // for
         // if we get here, the string was not found in the commands :
         return false;
     } // isCommand()
+
+    /**
+     * Affihce toutes les commandes valides.
+     */
+    public void showAll()
+    {
+        for ( String vCommand : aValidCommands ) {
+            System.out.print( vCommand + "  " );
+        }
+        System.out.println();
+    }
 } // CommandWords
