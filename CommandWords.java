@@ -45,13 +45,14 @@ public class CommandWords
     } // isCommand()
 
     /**
-     * Affihce toutes les commandes valides.
+     * Retourne toutes les commandes valides.
      */
-    public void showAll()
+    public String getCommandList()
     {
+        String vRes="";
         for ( String vCommand : aValidCommands ) {
-            System.out.print( vCommand + "  " );
+            vRes += vCommand + "  ";
         }
-        System.out.println();
+        return vRes;
     }
 } // CommandWords

@@ -97,8 +97,8 @@ public class Game {
      * Afficher les informations de bienvenue et les informations de la position actuelle.
      */
     private void printWelcome() {
-        System.out.println("Welcome to the World of Zuul!\n"
-                + "World of Zuul is a new, incredibly boring adventure game.\n"
+        System.out.println("Welcome to the Secret of the Cat!\n"
+                + "World is a new, incredibly boring adventure game.\n"
                 + "Type 'help' if you need help.");
         this.printLocationInfo();
     }
@@ -109,8 +109,7 @@ public class Game {
     private void printHelp() {
         System.out.println("You are lost. You are alone.\n"
                 + "You wander around at the university.\n\n"
-                + "Your command words are:");
-        this.aParser.showCommands();
+                + "Your command words are:"+this.aParser.getCommands()+"\n");
     }
 
     /**
