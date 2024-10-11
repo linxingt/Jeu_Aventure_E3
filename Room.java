@@ -11,14 +11,16 @@ public class Room
 {
     private String aDescription;
     private HashMap<String, Room> aExits;
+    private String aImgName;
     
     /**
      * Cree une nouveau salle avec la description et aExits par defaut.
      * @param pDescription description souhaitee pour cette salle
      */
-    public Room (final String pDescription) {
+    public Room (final String pDescription, final String pImgName) {
         this.aDescription=pDescription;
         this.aExits = new HashMap<String, Room>();
+        this.aImgName = pImgName;
     }
     
     /**
@@ -57,9 +59,16 @@ public class Room
     }    
     
     /**
-     * Retourne la description détaillée de la salle.
+     * Retourne la description detaillee de la salle.
      */
     public String getLongDescription(){
        return "You are " + this.aDescription + ".\n" + this.getExitString();
-    }    
+    }  
+    
+    /**
+     * Retourne le nom de l'image de la salle.
+     */
+    public String getImgName(){
+        return this.aImgName;
+    }
 } // Room
