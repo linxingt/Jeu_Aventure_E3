@@ -1,4 +1,6 @@
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -14,6 +16,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import java.net.URL;
+import java.util.Arrays;
 
 /**
  * This class implements a simple graphical user interface with a 
@@ -29,6 +32,8 @@ public class UserInterface implements ActionListener
     private JTextField aEntryField;
     private JTextArea  aLog;
     private JLabel     aImage;
+    private JButton[]   aBtsGo;
+    private String[] vDirections = {"North", "South", "West", "East", "Up", "Down"};
 
     /**
      * Construct a UserInterface. As a parameter, a Game Engine
@@ -108,11 +113,22 @@ public class UserInterface implements ActionListener
 
         this.aImage = new JLabel();
 
+        JPanel vEastPanel = new JPanel();// ==> place buttons add
+        vEastPanel.setLayout(new BoxLayout(vEastPanel, BoxLayout.Y_AXIS));//BoxLayout vertical
+        
+        this.aBtsGo = new JButton[vDirections.length];
+        for (int i = 0; i < vDirections.length; i++) {
+            aBtsGo[i] = new JButton(vDirections[i]);
+            vEastPanel.add(aBtsGo[i]);
+            aBtsGo[i].addActionListener(this);
+        }
+
         JPanel vPanel = new JPanel();
         vPanel.setLayout( new BorderLayout() ); // ==> only five places
         vPanel.add( this.aImage, BorderLayout.NORTH );
         vPanel.add( vListScroller, BorderLayout.CENTER );
         vPanel.add( this.aEntryField, BorderLayout.SOUTH );
+        vPanel.add( vEastPanel, BorderLayout.EAST );
 
         this.aMyFrame.getContentPane().add( vPanel, BorderLayout.CENTER );
 
@@ -140,7 +156,10 @@ public class UserInterface implements ActionListener
     {
         // no need to check the type of action at the moment
         // because there is only one possible action (text input) :
-        this.processCommand(); // never suppress this line
+        String vBtnName = pE.getActionCommand();
+        if (Arrays.asList(vDirections).contains(vBtnName)) {
+            this.aEngine.interpretCommand("go " + vBtnName.toLowerCase());
+        }else this.processCommand(); // never suppress this line
     } // actionPerformed(.)
 
     /**
