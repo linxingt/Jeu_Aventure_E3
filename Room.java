@@ -12,6 +12,7 @@ public class Room
     private String aDescription;
     private HashMap<String, Room> aExits;
     private String aImgName;
+    private Item aItem;
     
     /**
      * Cree une nouveau salle avec la description et aExits par defaut.
@@ -62,7 +63,7 @@ public class Room
      * Retourne la description detaillee de la salle.
      */
     public String getLongDescription(){
-       return "You are " + this.aDescription + ".\n" + this.getExitString();
+       return "You are " + this.aDescription + ".\n" + this.getItemDescription() + ".\n" + this.getExitString();
     }  
     
     /**
@@ -70,5 +71,22 @@ public class Room
      */
     public String getImgName(){
         return this.aImgName;
+    }
+
+    /**
+     * Configure l'item de la salle.
+     * @param pDescription description de l'item
+     * @param pWeight poids de l'item
+     */
+    public void setItem(final String pDescription, final int pWeight){
+        Item vItem = new Item(pDescription, pWeight);
+        this.aItem = vItem;
+    }
+
+    public String getItemDescription(){
+        if(this.aItem == null){
+            return "There is no item in this room.";
+        }
+        return this.aItem.getLongDescription();
     }
 } // Room

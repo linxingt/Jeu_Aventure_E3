@@ -70,7 +70,7 @@ public class UserInterface implements ActionListener
      */
     public void showImage( final String pImageName )
     {
-        String vImagePath = "" + pImageName; // to change the directory
+        String vImagePath = "Images/" + pImageName; // to change the directory
         URL vImageURL = this.getClass().getClassLoader().getResource( vImagePath );
         if ( vImageURL == null )
             System.out.println( "Image not found : " + vImagePath );
@@ -94,6 +94,9 @@ public class UserInterface implements ActionListener
         else { // disable
             this.aEntryField.getCaret().setBlinkRate( 0 ); // cursor won't blink
             this.aEntryField.removeActionListener( this ); // won't react to entry
+            for (int i = 0; i < vDirections.length; i++) {
+                aBtsGo[i].removeActionListener(this);
+            }
         }
     } // enable(.)
 

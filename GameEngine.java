@@ -38,17 +38,17 @@ public class GameEngine
         Room vOutside = new Room(
                 "standing outside the secret laboratory, \nthe entrance looming ahead with an air of mystery and danger.","entrance.jpg");
         Room vStorage = new Room(
-                "in a cluttered storage room, \nfilled with various discarded objects and tools, \nsome of which might be useful for your mission.","storage.png");
+                "in a cluttered storage room, \nfilled with various discarded objects and tools.","storage.png");
         Room vClean = new Room(
                 "in the clean room, \na sterile area where disinfection and changing take place. \nThe air smells faintly of chemicals, \nand a row of lockers lines the wall.","clean.jpg");
         Room vMeeting = new Room(
                 "in the meeting room, \nwhere scientists plan their experiments. \nA large table and chairs dominate the space, \nand diagrams cover the walls.","meeting.png");
         Room vPrison = new Room(
-                "in the prison room, \nwhere human subjects are held in confinement. \nThe air feels heavy with tension, \nand cold metal cages line the walls.","prison.jpg");
+                "in the prison room, \nwhere human subjects are held in confinement. \nThe air feels heavy with tension.","prison.jpg");
         Room vAnimal = new Room(
-                "in the animal room, a dark, isolated space \nwhere animals, transformed by experiments, are kept in cages. \nThe room is eerily quiet.","animal.jpg");
+                "in the animal room, a isolated space \nwhere animals, transformed by experiments, are kept in cages. \nThe room is eerily quiet.","animal.jpg");
         Room vArchive = new Room(
-                " in the archive room, a library-like space \nfilled with shelves of files and records. \nEach document holds secrets about the experiments conducted here.","archive.jpg");
+                " in the archive room, a space \nfilled with shelves of files and records. \nEach document holds secrets about the experiments conducted here.","archive.jpg");
         Room vExperimentation = new Room(
                 "in the experimentation room, \nwhere the darkest of the laboratory's procedures are carried out. \nSurgical beds and strange equipment fill the space.","exprience.jpg");
         Room vAleatoire = vAnimal; // random room, pas encore fait
@@ -57,10 +57,18 @@ public class GameEngine
 
         vStorage.setExits("down", vClean);
         vStorage.setExits("north", vOutside);
+        vStorage.setItem("1 key for the cabinet in the archives room", 30);
+        //itmems à ajouter dans vStorage
+        //tissu d'invisibilité
+        //un morceau de papier déchiré avec le nom de votre sœur - Alice
+        //un plan de tout le laboratoire.
 
         vClean.setExits("west", vMeeting);
         vClean.setExits("south", vAleatoire);
         vClean.setExits("up", vStorage);
+        vClean.setItem("1 access card for the experiment room.",10);
+        //itmems à ajouter dans vStorage
+        //gâteau magique
 
         vMeeting.setExits("east", vClean);
         vMeeting.setExits("west", vArchive);
