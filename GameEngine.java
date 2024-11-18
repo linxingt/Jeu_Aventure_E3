@@ -57,19 +57,17 @@ public class GameEngine
 
         vStorage.setExits("down", vClean);
         vStorage.setExits("north", vOutside);
-        vStorage.setItem("1 key for the cabinet in the archives room", 30);
-        //itmems à ajouter dans vStorage
-        //tissu d'invisibilité
-        //un morceau de papier déchiré avec le nom de votre sœur - Alice
-        //un plan de tout le laboratoire.
-
+        vStorage.addItem("a key for the cabinet in the archives room", 30,"archiKey");
+        vStorage.addItem("an invisibility Cloth can help you hide", 5,"inviCloth");
+        vStorage.addItem("a torn piece of paper with the name Alice", 2,"paperAlice");
+        vStorage.addItem("a plan of the entire laboratory", 8,"planLabo");
+        
         vClean.setExits("west", vMeeting);
         vClean.setExits("south", vAleatoire);
         vClean.setExits("up", vStorage);
-        vClean.setItem("1 access card for the experiment room.",10);
-        //itmems à ajouter dans vStorage
-        //gâteau magique
-
+        vClean.addItem("an access card for the experiment room",10,"experCard");
+        vClean.addItem("a magic cake can break the restriction that prevents you from lifting objects over 40 kg",30,"magiCake");
+        
         vMeeting.setExits("east", vClean);
         vMeeting.setExits("west", vArchive);
         vMeeting.setExits("south", vPrison);

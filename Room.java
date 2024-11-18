@@ -11,8 +11,8 @@ public class Room
 {
     private String aDescription;
     private HashMap<String, Room> aExits;
+    private HashMap<String, Item> aItems;
     private String aImgName;
-    private Item aItem;
     
     /**
      * Cree une nouveau salle avec la description et aExits par defaut.
@@ -21,6 +21,7 @@ public class Room
     public Room (final String pDescription, final String pImgName) {
         this.aDescription=pDescription;
         this.aExits = new HashMap<String, Room>();
+        this.aItems = new HashMap<String, Item>();
         this.aImgName = pImgName;
     }
     
@@ -63,7 +64,7 @@ public class Room
      * Retourne la description detaillee de la salle.
      */
     public String getLongDescription(){
-       return "You are " + this.aDescription + ".\n" + this.getItemDescription() + ".\n" + this.getExitString();
+       return "You are " + this.aDescription + ".\n" + this.getItemsDescription() + "\n" + this.getExitString();
     }  
     
     /**
@@ -74,19 +75,29 @@ public class Room
     }
 
     /**
-     * Configure l'item de la salle.
-     * @param pDescription description de l'item
-     * @param pWeight poids de l'item
+     * Retourne la description de l'item de la salle.
      */
-    public void setItem(final String pDescription, final int pWeight){
-        Item vItem = new Item(pDescription, pWeight);
-        this.aItem = vItem;
-    }
-
-    public String getItemDescription(){
-        if(this.aItem == null){
+    public String getItemsDescription(){
+        if(this.aItems.isEmpty()){
             return "There is no item in this room.";
         }
-        return this.aItem.getLongDescription();
+        else{
+            String vString = "Items in this room:\n";
+            for(String vName : this.aItems.keySet()){
+                vString += this.aItems.get(vName).getLongDescription() + "\n";
+            }
+            return vString;
+        }
+    }
+
+    /**
+     * Ajoute un item dans la salle.
+     * @param pDescription description de l'item
+     * @param pWeight poids de l'item
+     * @param pName nom de l'item
+     */
+    public void addItem (final String pDescription, final int pWeight, final String pName){
+        Item vItem = new Item(pDescription, pWeight);
+        this.aItems.put(pName, vItem);
     }
 } // Room

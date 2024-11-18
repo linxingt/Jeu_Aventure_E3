@@ -38,6 +38,6 @@ public class Item
     }
     
     public String getLongDescription(){
-        return "There is "+this.getItemDescription() + " (weight: " + this.getItemWeight() + "g)";
+        return "There is "+this.getItemDescription() + " (weight: " + this.getItemWeight() + "g).";
      }  
 }
