@@ -17,7 +17,7 @@ public class CommandWords
     // qui se contenterait d'afficher l'adresse (= la référence) de ce tableau.
     
     // a constant array that will hold all valid command words
-    private static final String aValidCommands[] = {"go", "help", "quit", "look","eat"};
+    private static final String aValidCommands[] = {"go", "help", "quit", "look","eat","back"};
 
     /**
      * Constructor - initialise the command words.
@@ -29,6 +29,7 @@ public class CommandWords
 
     /**
      * Check whether a given String is a valid command word. 
+     * @param pString The string to check
      * @return true if a given string is a valid command,
      * false if it isn't.
      */

@@ -1,4 +1,3 @@
-
 /**
  * D�crivez votre classe GameEngine ici.
  *
@@ -11,6 +10,7 @@ public class GameEngine
     private Room aCurrentRoom;
     private Parser aParser;
     private UserInterface aGui;
+    private String aStockDirection;
 
     /**
      * Constructeur d'objets de classe GameEngine
@@ -54,6 +54,7 @@ public class GameEngine
         Room vAleatoire = vAnimal; // random room, pas encore fait
 
         vOutside.setExits("south", vStorage);
+        vOutside.addItem("a discarded apple core", 30,"appleCore");
 
         vStorage.setExits("down", vClean);
         vStorage.setExits("north", vOutside);
@@ -103,9 +104,24 @@ public class GameEngine
             this.printLocationInfo();
             return;
         } else{
+            this.aStockDirection=pCmd.getSecondWord();
             this.aCurrentRoom = vNextRoom;
             this.printLocationInfo();
         }
+    }
+
+    /**
+     * Deplacer le joueur dans la salle précédante.
+     * @param pCmd commande de deplacement
+     */
+    private void back(final Command pCmd) {
+        if (pCmd.hasSecondWord()) {
+            this.aGui.println("You cannot specify a direction when going back.");
+            return;
+        }
+        Room vNextRoom = this.aCurrentRoom.leaveRoom(aStockDirection.equals("north")?"south":aStockDirection.equals("south")?"north":aStockDirection.equals("east")?"west":aStockDirection.equals("west")?"east":aStockDirection.equals("up")?"down":"up");
+        this.aCurrentRoom = vNextRoom;
+        this.printLocationInfo();
     }
 
     /**
@@ -171,6 +187,8 @@ public class GameEngine
             this.look(vCmd);
         } else if (vCmd.getCommandWord().equals("eat")) {
             this.eat();
+        } else if (vCmd.getCommandWord().equals("back")) {
+            this.back(vCmd);
         } else {
             this.aGui.println("I don't know what you mean...");
         }

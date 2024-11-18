@@ -17,6 +17,7 @@ public class Room
     /**
      * Cree une nouveau salle avec la description et aExits par defaut.
      * @param pDescription description souhaitee pour cette salle
+     * @param pImgName nom de l'image de la salle
      */
     public Room (final String pDescription, final String pImgName) {
         this.aDescription=pDescription;
@@ -75,7 +76,7 @@ public class Room
     }
 
     /**
-     * Retourne la description de l'item de la salle.
+     * Retourne la description de tous les items de la salle.
      */
     public String getItemsDescription(){
         if(this.aItems.isEmpty()){
@@ -99,5 +100,14 @@ public class Room
     public void addItem (final String pDescription, final int pWeight, final String pName){
         Item vItem = new Item(pDescription, pWeight);
         this.aItems.put(pName, vItem);
+    }
+
+    /**
+     * Retourne la salle selon la direction saisie.
+     * @param pDirection direction souhaitee
+     */
+    public Room leaveRoom(final String pDirection){
+        // System.out.println(this.getExit(pDirection).getLongDescription());//dans GameEngine ya ca deja dpnc pas bsn
+        return this.getExit(pDirection);
     }
 } // Room
