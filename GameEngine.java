@@ -1,3 +1,5 @@
+import java.util.Stack;
+
 /**
  * D�crivez votre classe GameEngine ici.
  *
@@ -10,7 +12,7 @@ public class GameEngine
     private Room aCurrentRoom;
     private Parser aParser;
     private UserInterface aGui;
-    private String aStockDirection;
+    private Stack<Room> aPreviousRooms;
 
     /**
      * Constructeur d'objets de classe GameEngine
@@ -19,6 +21,7 @@ public class GameEngine
     {
         this.createRooms();
         this.aParser = new Parser();
+        this.aPreviousRooms = new Stack<Room>(); //the last of the given elements is the first which will be retrieved.
     }
 
     /**
@@ -38,11 +41,11 @@ public class GameEngine
         Room vOutside = new Room(
                 "standing outside the secret laboratory, \nthe entrance looming ahead with an air of mystery and danger.","entrance.jpg");
         Room vStorage = new Room(
-                "in a cluttered storage room, \nfilled with various discarded objects and tools.","storage.png");
+                "in a cluttered storage room, \nfilled with various discarded objects and tools.","storage.jpg");
         Room vClean = new Room(
                 "in the clean room, \na sterile area where disinfection and changing take place. \nThe air smells faintly of chemicals, \nand a row of lockers lines the wall.","clean.jpg");
         Room vMeeting = new Room(
-                "in the meeting room, \nwhere scientists plan their experiments. \nA large table and chairs dominate the space, \nand diagrams cover the walls.","meeting.png");
+                "in the meeting room, \nwhere scientists plan their experiments. \nA large table and chairs dominate the space, \nand diagrams cover the walls.","meeting.jpg");
         Room vPrison = new Room(
                 "in the prison room, \nwhere human subjects are held in confinement. \nThe air feels heavy with tension.","prison.jpg");
         Room vAnimal = new Room(
@@ -50,7 +53,7 @@ public class GameEngine
         Room vArchive = new Room(
                 " in the archive room, a space \nfilled with shelves of files and records. \nEach document holds secrets about the experiments conducted here.","archive.jpg");
         Room vExperimentation = new Room(
-                "in the experimentation room, \nwhere the darkest of the laboratory's procedures are carried out. \nSurgical beds and strange equipment fill the space.","exprience.jpg");
+                "in the experimentation room, \nwhere the darkest of the laboratory's procedures are carried out. \nSurgical beds and strange equipment fill the space.","exprience.png");
         Room vAleatoire = vAnimal; // random room, pas encore fait
 
         vOutside.setExits("south", vStorage);
@@ -104,7 +107,7 @@ public class GameEngine
             this.printLocationInfo();
             return;
         } else{
-            this.aStockDirection=pCmd.getSecondWord();
+            this.aPreviousRooms.push(aCurrentRoom);//Pushes a new element on top of this Stack.
             this.aCurrentRoom = vNextRoom;
             this.printLocationInfo();
         }
@@ -118,9 +121,13 @@ public class GameEngine
         if (pCmd.hasSecondWord()) {
             this.aGui.println("You cannot specify a direction when going back.");
             return;
+        }else if(this.aPreviousRooms.isEmpty()){
+            this.aGui.println("There's nowhere you can go back to.");
+            return;
         }
-        Room vNextRoom = this.aCurrentRoom.leaveRoom(aStockDirection.equals("north")?"south":aStockDirection.equals("south")?"north":aStockDirection.equals("east")?"west":aStockDirection.equals("west")?"east":aStockDirection.equals("up")?"down":"up");
+        Room vNextRoom = this.aPreviousRooms.peek();//Returns the head element without modifying the Stack.
         this.aCurrentRoom = vNextRoom;
+        this.aPreviousRooms.pop();//Removes the head element from this Stack.
         this.printLocationInfo();
     }
 
@@ -196,7 +203,7 @@ public class GameEngine
 
     /**
      * Afficher la description de la salle actuelle.
-     * @param pCmd
+     * @param pCmd commande a traiter apres le mot look
      */
     private void look(final Command pCmd){
         if (pCmd.hasSecondWord()) {

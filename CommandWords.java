@@ -46,7 +46,7 @@ public class CommandWords
     } // isCommand()
 
     /**
-     * Retourne toutes les commandes valides.
+     * @return la chaines des commandes valides
      */
     public String getCommandList()
     {

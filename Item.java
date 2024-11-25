@@ -13,6 +13,8 @@ public class Item
 
     /**
      * Constructeur d'objets de classe Item
+     * @param pItemDescription description de l'objet
+     * @param pItemWeight poids de l'objet
      */
     public Item(final String pItemDescription,final int pItemWeight)
     {
@@ -22,7 +24,7 @@ public class Item
     }
 
     /**
-     * Retourne la description de l'objet.
+     * @return description de l'objet
      */
     public String getItemDescription()
     {
@@ -30,13 +32,16 @@ public class Item
     }
 
     /**
-     * Retourne le poids de l'objet.
+     * @return le poids de l'objet
      */
     public int getItemWeight()
     {
         return this.vWeight;
     }
     
+    /**
+     * @return la description longue de l'objet
+     */
     public String getLongDescription(){
         return "There is "+this.getItemDescription() + " (weight: " + this.getItemWeight() + "g).";
      }  

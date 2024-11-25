@@ -19,28 +19,28 @@ public class Command
     }
     
     /**
-     * Retourne le premier mot de la commande.
+     * @return le premier mot de la commande
      */
     public String getCommandWord(){
         return this.aCommandWord;
     }
     
     /**
-     * Retourne le second mot de la commande.
+     * @return le second mot de la commande
      */
     public String getSecondWord(){
         return this.aSecondWord;
     }
     
     /**
-     * Retourne true si la commande a un second mot, false sinon.
+     * @return true si la commande a un second mot, false sinon
      */
     public boolean hasSecondWord(){
         return this.aSecondWord != null;
     }
     
     /**
-     * Retourne true si le premier mot de la commande est null, false sinon.
+     * @return true si le premier mot de la commande est null, false sinon
      */
     public boolean isUnknown(){
         return this.aCommandWord == null;

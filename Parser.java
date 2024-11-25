@@ -29,6 +29,7 @@ public class Parser
     } // Parser()
 
     /**
+     * @param pInputLine The input line from the user.
      * @return The next command from the user.
      */
     public Command getCommand(final String pInputLine) 
@@ -58,7 +59,7 @@ public class Parser
     } // getCommand()
 
     /**
-     * Retourne toutes les commandes valides de aValidCommands.
+     * @return toutes les commandes valides de aValidCommands
      */
     public String getCommands() {
         return this.aValidCommands.getCommandList();

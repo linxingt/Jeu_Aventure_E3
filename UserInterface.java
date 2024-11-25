@@ -37,10 +37,8 @@ public class UserInterface implements ActionListener
 
     /**
      * Construct a UserInterface. As a parameter, a Game Engine
-     * (an object processing and executing the game commands) is
-     * needed.
-     * 
-     * @param gameEngine  The GameEngine object implementing the game logic.
+     * (an object processing and executing the game commands) is needed.
+     * @param pGameEngine  The GameEngine object implementing the game logic.
      */
     public UserInterface( final GameEngine pGameEngine )
     {
@@ -50,6 +48,7 @@ public class UserInterface implements ActionListener
 
     /**
      * Print out some text into the text area.
+     * @param pText The text to print.
      */
     public void print( final String pText )
     {
@@ -59,6 +58,7 @@ public class UserInterface implements ActionListener
 
     /**
      * Print out some text into the text area, followed by a line break.
+     * @param pText The text to print.
      */
     public void println( final String pText )
     {
@@ -67,6 +67,7 @@ public class UserInterface implements ActionListener
 
     /**
      * Show an image file in the interface.
+     * @param pImageName The name of the image file to display.
      */
     public void showImage( final String pImageName )
     {
@@ -83,6 +84,7 @@ public class UserInterface implements ActionListener
 
     /**
      * Enable or disable input in the entry field.
+     * @param pOnOff true to enable, false to disable.
      */
     public void enable( final boolean pOnOff )
     {

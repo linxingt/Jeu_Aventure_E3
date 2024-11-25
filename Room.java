@@ -27,14 +27,14 @@ public class Room
     }
     
     /**
-     * Retourne la description de la salle.
+     * @return la description de la salle
      */
     public String getDescription(){
         return this.aDescription;
     }
     
     /**
-     * Retourne la sortie de la salle selon la direction saisie.
+     * @return la sortie de la salle selon la direction saisie
      * @param pDirection direction souhaitee pour retourner la sortie
      */
     public Room getExit(final String pDirection){
@@ -51,7 +51,7 @@ public class Room
     }
     
     /**
-     * Retourne tous les sortie disponibles de la salle.
+     * @return tous les sortie disponibles de la salle
      */
     public String getExitString(){
         String vString="Exits:";
@@ -62,21 +62,21 @@ public class Room
     }    
     
     /**
-     * Retourne la description detaillee de la salle.
+     * @return la description detaillee de la salle
      */
     public String getLongDescription(){
        return "You are " + this.aDescription + ".\n" + this.getItemsDescription() + "\n" + this.getExitString();
     }  
     
     /**
-     * Retourne le nom de l'image de la salle.
+     * @return le nom de l'image de la salle
      */
     public String getImgName(){
         return this.aImgName;
     }
 
     /**
-     * Retourne la description de tous les items de la salle.
+     * @return la description de tous les items de la salle
      */
     public String getItemsDescription(){
         if(this.aItems.isEmpty()){
@@ -103,7 +103,7 @@ public class Room
     }
 
     /**
-     * Retourne la salle selon la direction saisie.
+     * @return la salle selon la direction saisie
      * @param pDirection direction souhaitee
      */
     public Room leaveRoom(final String pDirection){
