@@ -37,7 +37,8 @@ public class Item
     }
     
     /**
-     * @return modifie si l'objet est visible
+     * Modifie si l'objet est visible
+     * @param pItemVisible si l'objet est visible
      */
     public void setVisible(final boolean pItemVisible){
         this.aVisible = pItemVisible;

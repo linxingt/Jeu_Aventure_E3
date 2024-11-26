@@ -67,6 +67,7 @@ public class Room
     
     /**
      * @return la description detaillee de la salle
+     * @param pPlayer joueur actuel
      */
     public String getLongDescription(final Player pPlayer){
        return "You are " + this.aDescription + "\n" + this.getExitString()+ "\n" + this.getItemsNames(pPlayer) + "\n" ;
@@ -81,6 +82,7 @@ public class Room
 
     /**
      * @return les noms des items dans la salle
+     * @param pPlayer joueur actuel
      */
     public String getItemsNames(final Player pPlayer){
         if(this.aItems.isEmpty()){
