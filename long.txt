@@ -1,0 +1,16 @@
+go south
+go down
+go up
+back
+go west
+go west
+go north
+help
+go east
+go south
+eat
+go south
+back
+look
+go east
+go south

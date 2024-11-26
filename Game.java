@@ -14,7 +14,9 @@
 
 public class Game
 {
+    /** une interface utilisateur avec laquelle l'utilisateur peut interagir */
     private UserInterface aGui;
+    /** un moteur de jeu qui gere la fonctionnalite du jeu */
     private GameEngine aEngine;
 
     /**

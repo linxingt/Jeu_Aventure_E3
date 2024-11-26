@@ -14,10 +14,12 @@ public class CommandWords
     // dans cette classe (même si on l'instancie plusieurs fois)
      
     // On ne peut pas afficher les valeurs d'un tableau par un simple S.o.p(vTab); 
-    // qui se contenterait d'afficher l'adresse (= la référence) de ce tableau.
+    // qui se contenterait d'afficher l'adresse (= la reference) de ce tableau.
     
-    // a constant array that will hold all valid command words
-    private static final String aValidCommands[] = {"go", "help", "quit", "look","eat","back"};
+    /** 
+     * un tableau constant contenant tous les mots de commande valides.
+     */
+    private static final String aValidCommands[] = {"go", "help", "quit", "look","eat","back","test","take","drop"};
 
     /**
      * Constructor - initialise the command words.
@@ -36,8 +38,8 @@ public class CommandWords
     public boolean isCommand( final String pString )
     {
         for ( int vI=0; vI<aValidCommands.length; vI++ ) {
-            // i++ est strictement équivalent à i = i+1 
-            // (exécuté à la fin de chaque tour de boucle)
+            // i++ est strictement equivalent a i = i+1 
+            // (execute a la fin de chaque tour de boucle)
             if ( aValidCommands[vI].equals( pString ) )
                 return true;
         } // for

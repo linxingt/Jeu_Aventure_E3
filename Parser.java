@@ -18,6 +18,7 @@ import java.util.StringTokenizer;
  */
 public class Parser 
 {
+    /**un ensemble de mots de commande valides*/
     private CommandWords aValidCommands;  // (voir la classe CommandWords)
     
     /**

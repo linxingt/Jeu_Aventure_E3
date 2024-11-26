@@ -5,7 +5,9 @@
  */
 public class Command
 {
+    /** le premier mot de la commande */
     private String aCommandWord;
+    /**le second mot de la commande si il y en a un sinon null*/
     private String aSecondWord;
     
     /**

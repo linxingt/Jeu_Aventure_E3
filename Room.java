@@ -9,9 +9,13 @@ import java.util.HashMap;
  */
 public class Room
 {
+    /** description de la salle */
     private String aDescription;
+    /** les sorties de la salle avec direction et salle correspondante */
     private HashMap<String, Room> aExits;
+    /** les items de la salle avec nom et item correspondant */
     private HashMap<String, Item> aItems;
+    /** le nom de l'image de la salle */
     private String aImgName;
     
     /**
@@ -64,8 +68,8 @@ public class Room
     /**
      * @return la description detaillee de la salle
      */
-    public String getLongDescription(){
-       return "You are " + this.aDescription + ".\n" + this.getItemsDescription() + "\n" + this.getExitString();
+    public String getLongDescription(final Player pPlayer){
+       return "You are " + this.aDescription + "\n" + this.getExitString()+ "\n" + this.getItemsNames(pPlayer) + "\n" ;
     }  
     
     /**
@@ -76,16 +80,18 @@ public class Room
     }
 
     /**
-     * @return la description de tous les items de la salle
+     * @return les noms des items dans la salle
      */
-    public String getItemsDescription(){
+    public String getItemsNames(final Player pPlayer){
         if(this.aItems.isEmpty()){
             return "There is no item in this room.";
         }
         else{
-            String vString = "Items in this room:\n";
+            String vString = "You can see the following items:\n";
             for(String vName : this.aItems.keySet()){
-                vString += this.aItems.get(vName).getLongDescription() + "\n";
+                boolean vVisible = this.aItems.get(vName).getVisible();
+                if(vVisible||(!vVisible&&(vName.equals("cloth")||vName.equals("cake"))&&pPlayer.getItemsNames().contains("glasses")))
+                    vString += this.aItems.get(vName).getLongName() + "\n";
             }
             return vString;
         }
@@ -96,18 +102,37 @@ public class Room
      * @param pDescription description de l'item
      * @param pWeight poids de l'item
      * @param pName nom de l'item
+     * @param pCanBePickedUp si l'item peut etre ramasse
+     * @param pCanBeSeen si l'item peut etre vu
      */
-    public void addItem (final String pDescription, final int pWeight, final String pName){
-        Item vItem = new Item(pDescription, pWeight);
+    public void addItem (final String pDescription, final int pWeight, final String pName, final boolean pCanBePickedUp, final boolean pCanBeSeen){
+        Item vItem = new Item(pDescription, pWeight, pName, pCanBePickedUp, pCanBeSeen);
         this.aItems.put(pName, vItem);
     }
 
     /**
-     * @return la salle selon la direction saisie
-     * @param pDirection direction souhaitee
+     * Ajoute un item dans la salle.
+     * @param pItem item a ajouter
      */
-    public Room leaveRoom(final String pDirection){
-        // System.out.println(this.getExit(pDirection).getLongDescription());//dans GameEngine ya ca deja dpnc pas bsn
-        return this.getExit(pDirection);
+    public void addItem (final Item pItem){
+        this.aItems.put(pItem.getItemName(), pItem);
+    }
+
+    /**
+     * @return l'item selon le nom saisi
+     * @param pItemName nom de l'item souhaite
+     */
+    public Item getOneItem(final String pItemName){
+        if(this.aItems.containsKey(pItemName))
+            return this.aItems.get(pItemName);
+        return null;
+    }
+
+    /**
+     * Supprime un item de la salle.
+     * @param pItemName nom de l'item a supprimer
+     */
+    public void removeItem(final String pItemName){
+        this.aItems.remove(pItemName);
     }
 } // Room

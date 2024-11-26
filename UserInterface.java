@@ -27,12 +27,19 @@ import java.util.Arrays;
  */
 public class UserInterface implements ActionListener
 {
+    /**un moteur de jeu qui gere la fonctionnalite du jeu*/
     private GameEngine aEngine;
+    /**la fenetre principale de l'interface*/
     private JFrame     aMyFrame;
+    /**la zone de texte pour l'entree de l'utilisateur*/
     private JTextField aEntryField;
+    /**la zone de texte pour la sortie du programme*/
     private JTextArea  aLog;
+    /**permet d'afficher une image*/
     private JLabel     aImage;
+    /**un tableau de boutons pour les directions*/
     private JButton[]   aBtsGo;
+    /**un tableau contenant les directions possibles*/
     private String[] vDirections = {"North", "South", "West", "East", "Up", "Down"};
 
     /**

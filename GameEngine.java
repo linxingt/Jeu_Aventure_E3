@@ -1,27 +1,31 @@
-import java.util.Stack;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 /**
- * D�crivez votre classe GameEngine ici.
+ * Decrivez votre classe GameEngine ici.
  *
  * @author (votre nom)
- * @version (un num�ro de version ou une date)
+ * @version (un numero de version ou une date)
  */
 public class GameEngine
 {
-    // variables d'instance - remplacez l'exemple qui suit par le v�tre
-    private Room aCurrentRoom;
+    /** le joueur */
+    private Player aPlayer;
+    /** le parser qui analyse les commandes */
     private Parser aParser;
+    /** l'interface utilisateur */
     private UserInterface aGui;
-    private Stack<Room> aPreviousRooms;
 
     /**
      * Constructeur d'objets de classe GameEngine
      */
     public GameEngine()
     {
+        String vPrenom = javax.swing.JOptionPane.showInputDialog( "What's your name?" );
+        this.aPlayer = new Player( vPrenom );
         this.createRooms();
         this.aParser = new Parser();
-        this.aPreviousRooms = new Stack<Room>(); //the last of the given elements is the first which will be retrieved.
     }
 
     /**
@@ -35,7 +39,7 @@ public class GameEngine
     }
 
     /**
-     * Initialise position actuel et des salles du Game avec la description et sorties par defaut.
+     * Initialiser les salles, les sorties et la position actuelle du joueur.
      */
     private void createRooms() {
         Room vOutside = new Room(
@@ -57,38 +61,44 @@ public class GameEngine
         Room vAleatoire = vAnimal; // random room, pas encore fait
 
         vOutside.setExits("south", vStorage);
-        vOutside.addItem("a discarded apple core", 30,"appleCore");
+        vOutside.addItem("an old pair of glasses without lenses. Wearing it can make you see things differently", 40,"glasses",true,true);  // 40 is the weight of the item
 
         vStorage.setExits("down", vClean);
         vStorage.setExits("north", vOutside);
-        vStorage.addItem("a key for the cabinet in the archives room", 30,"archiKey");
-        vStorage.addItem("an invisibility Cloth can help you hide", 5,"inviCloth");
-        vStorage.addItem("a torn piece of paper with the name Alice", 2,"paperAlice");
-        vStorage.addItem("a plan of the entire laboratory", 8,"planLabo");
-        
+        vStorage.addItem("a key for the cabinet in the archives room", 60,"key",true,true);
+        vStorage.addItem("an invisible cloth can help you hide", 50,"cloth",true,false);
+        vStorage.addItem("a torn piece of paper with the name Alice", 2,"paper",false,true);
+        vStorage.addItem("a plan of the entire laboratory but broken", 10,"plan",false,true);
+
         vClean.setExits("west", vMeeting);
         vClean.setExits("south", vAleatoire);
         vClean.setExits("up", vStorage);
-        vClean.addItem("an access card for the experiment room",10,"experCard");
-        vClean.addItem("a magic cake can break the restriction that prevents you from lifting objects over 40 kg",30,"magiCake");
+        vClean.addItem("an access card for the experiment room",50,"card",true,true);
+        vClean.addItem("a magic cake that can increase your maximum ability to take things by 20% after eating it", 70,"cake",true,false);
         
         vMeeting.setExits("east", vClean);
         vMeeting.setExits("west", vArchive);
         vMeeting.setExits("south", vPrison);
         vMeeting.setExits("north", vAnimal);
+        vMeeting.addItem("a whiteboard displays a discussion about which animal to place 2566's soul into, along with a prominent slogan",500,"whiteboard",false,true);
 
         vPrison.setExits("north", vMeeting);
 
         vAnimal.setExits("west", vExperimentation);
         vAnimal.setExits("south", vMeeting);
+        vAnimal.addItem("an empty cage with a small plastic tag labeled 2566", 300,"cage",false,true);
 
         vArchive.setExits("east", vMeeting);
         vArchive.setExits("north", vExperimentation);
+        vArchive.addItem("a cabinet with a lock", 900,"cabinet",false,true);
+        //attends key open cabinet
+        //"You use the key to open the cabinet and find a lot of \nexperimenter information, sorted by name. You easily find \nAlice's information and find that her name and photo are \nthe same as your missing sister. You also find that the latest information \nindicates that she will be sent to the laboratory within a week. \nWhen flipping through the information, you find that the \nearliest information about this laboratory appears in 2050. \nYou suspect that this is the year the laboratory was founded. \nA piece of paper with August 9, 2050 written on it falls \nfrom the book, proving your guess."
 
         vExperimentation.setExits("east", vAnimal);
         vExperimentation.setExits("south", vArchive);
+        vExperimentation.addItem("a bed with a small sign saying 2566", 300,"bed",false,true);
 
-        this.aCurrentRoom = vOutside;
+        aPlayer.setCurrentRoom(vOutside);
     }
 
     /**
@@ -101,33 +111,31 @@ public class GameEngine
             return;
         }
         String vDirection = pCmd.getSecondWord();
-        Room vNextRoom = this.aCurrentRoom.getExit(vDirection);
+        Room vNextRoom = this.aPlayer.getCurrentRoom().getExit(vDirection);
         if(vNextRoom==null){
             this.aGui.println("There is no door !");
-            this.printLocationInfo();
-            return;
         } else{
-            this.aPreviousRooms.push(aCurrentRoom);//Pushes a new element on top of this Stack.
-            this.aCurrentRoom = vNextRoom;
-            this.printLocationInfo();
+            this.aPlayer.addPreviousRoom(this.aPlayer.getCurrentRoom());//Pushes a new element on top of this Stack.
+            this.aPlayer.setCurrentRoom(vNextRoom);
         }
+        this.printLocationInfo();
     }
 
     /**
-     * Deplacer le joueur dans la salle précédante.
+     * Deplacer le joueur dans la salle precedante.
      * @param pCmd commande de deplacement
      */
     private void back(final Command pCmd) {
         if (pCmd.hasSecondWord()) {
             this.aGui.println("You cannot specify a direction when going back.");
             return;
-        }else if(this.aPreviousRooms.isEmpty()){
+        }else if(this.aPlayer.PreviousRoomIsEmpty()){
             this.aGui.println("There's nowhere you can go back to.");
             return;
         }
-        Room vNextRoom = this.aPreviousRooms.peek();//Returns the head element without modifying the Stack.
-        this.aCurrentRoom = vNextRoom;
-        this.aPreviousRooms.pop();//Removes the head element from this Stack.
+        Room vNextRoom = this.aPlayer.getPreviousRoom();//Returns the head element without modifying the Stack.
+        this.aPlayer.setCurrentRoom(vNextRoom);
+        this.aPlayer.removePreviousRoom();//Removes the head element from this Stack.
         this.printLocationInfo();
     }
 
@@ -135,9 +143,9 @@ public class GameEngine
      * Afficher les informations localisation de salle actuel.
      */
     private void printLocationInfo() {
-        this.aGui.println(this.aCurrentRoom.getLongDescription());
-        if ( this.aCurrentRoom.getImgName() != null )
-            this.aGui.showImage( this.aCurrentRoom.getImgName() );
+        this.aGui.println(this.aPlayer.getCurrentRoom().getLongDescription(this.aPlayer));
+        if ( this.aPlayer.getCurrentRoom().getImgName() != null )
+            this.aGui.showImage( this.aPlayer.getCurrentRoom().getImgName() );
     }
 
     /**
@@ -193,29 +201,124 @@ public class GameEngine
         } else if (vCmd.getCommandWord().equals("look")) {
             this.look(vCmd);
         } else if (vCmd.getCommandWord().equals("eat")) {
-            this.eat();
+            this.eat(vCmd);
         } else if (vCmd.getCommandWord().equals("back")) {
             this.back(vCmd);
+        } else if (vCmd.getCommandWord().equals("test")) {
+            this.test(vCmd);
+        } else if (vCmd.getCommandWord().equals("take")) {
+            this.take(vCmd);
+        } else if (vCmd.getCommandWord().equals("drop")) {
+            this.drop(vCmd);
         } else {
             this.aGui.println("I don't know what you mean...");
         }
     }
 
     /**
-     * Afficher la description de la salle actuelle.
+     * Afficher les informations de la salle actuelle et les objets dans joueur.
      * @param pCmd commande a traiter apres le mot look
      */
     private void look(final Command pCmd){
         if (pCmd.hasSecondWord()) {
-            this.aGui.println("I don't know how to look at something in particular yet.");
+            String vItemName=pCmd.getSecondWord();
+            Item vItem = this.aPlayer.getCurrentRoom().getOneItem(vItemName);
+            if(vItem==null){
+                this.aGui.println("The item you are looking for is not in this room.");
+                return;
+            }
+            this.aGui.println("There is "+vItem.getItemDescription()+".");
+            return;
         }
-        this.aGui.println(this.aCurrentRoom.getLongDescription());
+        this.aGui.println(this.aPlayer.getCurrentRoom().getLongDescription(this.aPlayer)+"\n"+this.aPlayer.getItemsNames()+"\n"+this.aPlayer.getWeightInfo());
     }
 
     /**
-     * Afficher un message par raport a l'action de manger.
+     * Manger un objet.
+     * @param pCmd commande a traiter apres le mot eat
      */
-    private void eat(){
-        this.aGui.println("You have eaten now and you are not hungry any more.");
+    private void eat(final Command pCmd){
+        if (!pCmd.hasSecondWord()) {
+            this.aGui.println("Eat what?");
+            return;
+        }
+        if(pCmd.getSecondWord()=="cake"){
+            this.aPlayer.setWeightAllowed(120);
+            this.aGui.println("You have eaten the magic cake and now you have "+this.aPlayer.getWeightAllowed()+"% capacity to carry things.");
+        }
+        else
+            this.aGui.println("You have eaten now and you are not hungry any more.");
+    }
+
+    /**
+     * Tester les commandes dans un fichier.
+     * @param pCmd commande a traiter qui a le nom du fichier comme second mot
+     */
+    private void test(final Command pCmd){
+        if (!pCmd.hasSecondWord()) {
+            this.aGui.println("Test what?");
+            return;
+        }
+        Scanner vSc=null;
+        try { // pour "essayer" les instructions suivantes :
+            vSc = new Scanner( new File( pCmd.getSecondWord()+".txt" ) ); // ouverture du fichier s'il existe
+            while ( vSc.hasNextLine() ) { // tant qu'il y a encore une ligne a lire dans le fichier
+                interpretCommand(vSc.nextLine()); // lecture de la ligne dans le fichier
+                /// traitement de la ligne lue
+            } // while
+        } // try
+        catch ( final FileNotFoundException pFNFE ) { // si le fichier n'existe pas
+            /// traitement en cas d'exception
+        } // catch
+        finally
+        {
+            if(vSc !=null)
+            {
+                vSc.close();
+                return;
+            }
+        }
+    }
+
+    /**
+     * Prendre un objet.
+     * @param pCmd commande a traiter apres le mot take
+     */
+    private void take(final Command pCmd){
+        if (!pCmd.hasSecondWord()) {
+            this.aGui.println("Take what?");
+            return;
+        }
+        String vItemName = pCmd.getSecondWord();
+        Item vItem = this.aPlayer.getCurrentRoom().getOneItem(vItemName);
+        if(vItem==null){
+            this.aGui.println("There is no such item in this room.");
+            return;
+        }
+        if(vItem.getCanBePickedUp()){
+                this.aPlayer.pickUpItem(vItem, aGui);
+                this.aPlayer.getCurrentRoom().removeItem(vItemName);
+        }else{
+            this.aGui.println(vItemName + " cannot be picked up.");
+        }
+    }
+
+    /**
+     * Lacher un objet.
+     * @param pCmd commande a traiter apres le mot drop
+     */
+    private void drop(final Command pCmd){
+        if (!pCmd.hasSecondWord()) {
+            this.aGui.println("Drop what?");
+            return;
+        }
+        String vItemName = pCmd.getSecondWord();
+        Item vItem = this.aPlayer.getOneItem(vItemName);
+        if(vItem==null){
+            this.aGui.println("You don't have this item in your inventory.");
+            return;
+        }
+        this.aPlayer.dropItem(vItemName, aGui);
+        this.aPlayer.getCurrentRoom().addItem(vItem);
     }
 }
