@@ -173,7 +173,7 @@ public class GameEngine
      */
     private void quit(final Command pCmd) {
         if (pCmd.hasSecondWord()) {
-            this.aGui.println("Quit what ?");
+            this.aGui.println("Quit can't be followed by a second word.");
         }else {
             this.aGui.println("Thank you for playing.  Good bye.");
             this.aGui.enable(false);
@@ -210,6 +210,8 @@ public class GameEngine
             this.take(vCmd);
         } else if (vCmd.getCommandWord().equals("drop")) {
             this.drop(vCmd);
+        } else if (vCmd.getCommandWord().equals("items")) {
+            this.items(vCmd);
         } else {
             this.aGui.println("I don't know what you mean...");
         }
@@ -230,7 +232,7 @@ public class GameEngine
             this.aGui.println("There is "+vItem.getItemDescription()+".");
             return;
         }
-        this.aGui.println(this.aPlayer.getCurrentRoom().getLongDescription(this.aPlayer)+"\n"+this.aPlayer.getItemsNames()+"\n"+this.aPlayer.getWeightInfo());
+        this.aGui.println(this.aPlayer.getCurrentRoom().getLongDescription(this.aPlayer)+"\n");
     }
 
     /**
@@ -247,7 +249,7 @@ public class GameEngine
             this.aGui.println("You have eaten the magic cake and now you have "+this.aPlayer.getWeightAllowed()+"% capacity to carry things.");
         }
         else
-            this.aGui.println("You have eaten now and you are not hungry any more.");
+            this.aGui.println("You have eaten a food imaginary, you are not hungry anymore.");
     }
 
     /**
@@ -320,5 +322,13 @@ public class GameEngine
         }
         this.aPlayer.dropItem(vItemName, aGui);
         this.aPlayer.getCurrentRoom().addItem(vItem);
+    }
+
+    private void items(final Command pCmd){
+        if (pCmd.hasSecondWord()) {
+            this.aGui.println("Items can't be followed by a second word.");
+            return; 
+        }
+        this.aGui.println(this.aPlayer.getItemsNames()+"\n"+this.aPlayer.getWeightInfo());
     }
 }

@@ -1,4 +1,3 @@
-import java.util.HashMap;
 import java.util.Stack;
 
 /**
@@ -14,7 +13,7 @@ public class Player
     /** les salles precedentes du joueur */
     private Stack<Room> aPreviousRooms;
     /** les items du joueur avec nom et item correspondant */
-    private HashMap<String, Item> aItems;
+    private ItemList aItems;
     /** le poids autorise du joueur */
     private int aWeightAllowed;
     /** le poids actuel du joueur */
@@ -30,7 +29,7 @@ public class Player
     {
         this.aName = pName;
         this.aPreviousRooms = new Stack<Room>();
-        this.aItems = new HashMap<String, Item>();
+        this.aItems = new ItemList();
         this.aWeightAllowed = 100;
     }
 
@@ -77,22 +76,6 @@ public class Player
     }
 
     /**
-     * @return une chaine de caractere avec les noms des items du joueur
-     */
-    public String getItemsNames()
-    {
-        if(this.aItems.isEmpty()){
-            return "You don't have any items on you";
-        }
-        String vItemsNames = "You have the following items:\n";
-        for (String vItemName : this.aItems.keySet())
-        {
-            vItemsNames += this.aItems.get(vItemName).getItemName() + "\n";
-        }
-        return vItemsNames;
-    }
-
-    /**
      * ramasser un item
      * @param pItem item a ramasser
      * @param pGui interface graphique pour afficher des messages
@@ -105,7 +88,7 @@ public class Player
         }
         else
         {
-            this.aItems.put(pItem.getItemName(), pItem);
+            this.aItems.addItem(pItem);
             this.aWeightActual += pItem.getItemWeight();
             pGui.println("You picked up the item: " + pItem.getItemName());
         }
@@ -119,8 +102,14 @@ public class Player
     public void dropItem(final String pItemName, final UserInterface pGui)
     {
         //test if item exists in class GameEngine
-        this.aWeightActual -= this.aItems.get(pItemName).getItemWeight();
-        this.aItems.remove(pItemName);
+        Item vItem = this.aItems.getOneItem(pItemName);
+        if(vItem == null)
+        {
+            pGui.println("You don't have this item.");
+            return;
+        }
+        this.aWeightActual -= vItem.getItemWeight();
+        this.aItems.removeItem(pItemName);
         pGui.println("You dropped the item: " + pItemName);
     }
 
@@ -159,23 +148,18 @@ public class Player
     }
 
     /**
-     * @param pItemName nom de l'item souhaite
-     * @return l'item selon le nom saisi
-     */
-    public Item getOneItem(final String pItemName)
-    {
-        if(this.aItems.containsKey(pItemName))
-        {
-            return this.aItems.get(pItemName);
-        }
-        return null;
-    }
-
-    /**
      * @return les informations sur le poids du joueur
      */
     public String getWeightInfo()
     {
         return "You are carrying " + this.aWeightActual + "% of your weight capacity (" + this.aWeightAllowed + "%)";
+    }
+
+    public Item getOneItem(String vItemName) {
+        return this.aItems.getOneItem(vItemName);
+    }
+
+    public String getItemsNames() {
+        return this.aItems.getItemsNames("player",this);
     }
 }

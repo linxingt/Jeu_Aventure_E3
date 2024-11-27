@@ -14,7 +14,7 @@ public class Room
     /** les sorties de la salle avec direction et salle correspondante */
     private HashMap<String, Room> aExits;
     /** les items de la salle avec nom et item correspondant */
-    private HashMap<String, Item> aItems;
+    private ItemList aItems;
     /** le nom de l'image de la salle */
     private String aImgName;
     
@@ -26,7 +26,7 @@ public class Room
     public Room (final String pDescription, final String pImgName) {
         this.aDescription=pDescription;
         this.aExits = new HashMap<String, Room>();
-        this.aItems = new HashMap<String, Item>();
+        this.aItems = new ItemList();
         this.aImgName = pImgName;
     }
     
@@ -70,7 +70,7 @@ public class Room
      * @param pPlayer joueur actuel
      */
     public String getLongDescription(final Player pPlayer){
-       return "You are " + this.aDescription + "\n" + this.getExitString()+ "\n" + this.getItemsNames(pPlayer) + "\n" ;
+       return "You are " + this.aDescription + "\n" + this.getExitString()+ "\n" + this.aItems.getItemsNames("room",pPlayer) + "\n" ;
     }  
     
     /**
@@ -81,60 +81,39 @@ public class Room
     }
 
     /**
-     * @return les noms des items dans la salle
-     * @param pPlayer joueur actuel
+     * @param pItemName nom de l'item a retirer
+     * @return l'item retire si l'item existe, sinon null
      */
-    public String getItemsNames(final Player pPlayer){
-        if(this.aItems.isEmpty()){
-            return "There is no item in this room.";
-        }
-        else{
-            String vString = "You can see the following items:\n";
-            for(String vName : this.aItems.keySet()){
-                boolean vVisible = this.aItems.get(vName).getVisible();
-                if(vVisible||(!vVisible&&(vName.equals("cloth")||vName.equals("cake"))&&pPlayer.getItemsNames().contains("glasses")))
-                    vString += this.aItems.get(vName).getLongName() + "\n";
-            }
-            return vString;
-        }
+    public Item removeItem(final String pItemName) {
+        return this.aItems.removeItem(pItemName);
     }
 
     /**
-     * Ajoute un item dans la salle.
+     * Ajoute un item dans la salle en passant un objet Item existant.
+     * @param pItem item a ajouter
+     */
+    public void addItem(final Item pItem) {
+        this.aItems.addItem(pItem);
+    }
+
+    /**
+     * @param pItemName nom de l'item a chercher
+     * @return l'item trouve si l'item existe, sinon null
+     */
+    public Item getOneItem(final String pItemName) {
+        return this.aItems.getOneItem(pItemName);
+    }
+
+    /**
+     * Ajoute un item dans la salle en creant un objet Item.
      * @param pDescription description de l'item
      * @param pWeight poids de l'item
      * @param pName nom de l'item
      * @param pCanBePickedUp si l'item peut etre ramasse
      * @param pCanBeSeen si l'item peut etre vu
      */
-    public void addItem (final String pDescription, final int pWeight, final String pName, final boolean pCanBePickedUp, final boolean pCanBeSeen){
-        Item vItem = new Item(pDescription, pWeight, pName, pCanBePickedUp, pCanBeSeen);
-        this.aItems.put(pName, vItem);
+    public void addItem(final String pDescription, final int pWeight, final String pName, final boolean pCanBePickedUp, final boolean pCanBeSeen) {
+        this.aItems.addItem(pDescription, pWeight, pName, pCanBePickedUp, pCanBeSeen);
     }
 
-    /**
-     * Ajoute un item dans la salle.
-     * @param pItem item a ajouter
-     */
-    public void addItem (final Item pItem){
-        this.aItems.put(pItem.getItemName(), pItem);
-    }
-
-    /**
-     * @return l'item selon le nom saisi
-     * @param pItemName nom de l'item souhaite
-     */
-    public Item getOneItem(final String pItemName){
-        if(this.aItems.containsKey(pItemName))
-            return this.aItems.get(pItemName);
-        return null;
-    }
-
-    /**
-     * Supprime un item de la salle.
-     * @param pItemName nom de l'item a supprimer
-     */
-    public void removeItem(final String pItemName){
-        this.aItems.remove(pItemName);
-    }
 } // Room
