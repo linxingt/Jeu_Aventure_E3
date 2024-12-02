@@ -79,6 +79,7 @@ public class Player
      * ramasser un item
      * @param pItem item a ramasser
      * @param pGui interface graphique pour afficher des messages
+     * @return oui si l'item est ramasse, non sinon
      */
     public boolean pickUpItem(final Item pItem, final UserInterface pGui)
     {
@@ -157,19 +158,34 @@ public class Player
         return "You are carrying " + this.aWeightActual + "% of your weight capacity (" + this.aWeightAllowed + "%)";
     }
 
+    /**
+     * @param vItemName nom de l'item que le joueur veut obtenir
+     * @return l'item que le joueur veut obtenir
+     */
     public Item getOneItem(String vItemName) {
         return this.aItems.getOneItem(vItemName);
     }
 
+    /**
+     * @return les noms des items du joueur
+     */
     public String getItemsNames() {
         return this.aItems.getItemsNames("player",this);
     }
 
+    /**
+     * supprimer un item du joueur
+     * @param vItemName nom de l'item a retirer
+     */
     public void removeItem(String vItemName) {
         Item vItem=this.aItems.removeItem(vItemName);
         this.aWeightActual -= vItem.getItemWeight();
     }
 
+    /**
+     * @param pItemName nom de l'item
+     * @return si le joueur a l'item
+     */
     public boolean hasItem(String pItemName) {
         return this.aItems.hasItem(pItemName);
     }

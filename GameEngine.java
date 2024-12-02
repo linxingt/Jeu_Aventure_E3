@@ -103,7 +103,7 @@ public class GameEngine
 
     /**
      * Deplacer le joueur dans une direction donnee.
-     * @param pCmd commande de deplacement
+     * @param pCmd commande a traiter
      */
     private void goRoom(final Command pCmd) {
         if (!pCmd.hasSecondWord()) {
@@ -123,7 +123,7 @@ public class GameEngine
 
     /**
      * Deplacer le joueur dans la salle precedante.
-     * @param pCmd commande de deplacement
+     * @param pCmd commande a traiter
      */
     private void back(final Command pCmd) {
         if (pCmd.hasSecondWord()) {
@@ -219,7 +219,7 @@ public class GameEngine
 
     /**
      * Afficher les informations de la salle actuelle et les objets dans joueur.
-     * @param pCmd commande a traiter apres le mot look
+     * @param pCmd commande a traiter 
      */
     private void look(final Command pCmd){
         if (pCmd.hasSecondWord()) {
@@ -237,7 +237,7 @@ public class GameEngine
 
     /**
      * Manger un objet.
-     * @param pCmd commande a traiter apres le mot eat
+     * @param pCmd commande a traiter
      */
     private void eat(final Command pCmd){
         if (!pCmd.hasSecondWord()) {
@@ -290,7 +290,7 @@ public class GameEngine
 
     /**
      * Prendre un objet.
-     * @param pCmd commande a traiter apres le mot take
+     * @param pCmd commande a traiter
      */
     private void take(final Command pCmd){
         if (!pCmd.hasSecondWord()) {
@@ -312,7 +312,7 @@ public class GameEngine
 
     /**
      * Lacher un objet.
-     * @param pCmd commande a traiter apres le mot drop
+     * @param pCmd commande a traiter
      */
     private void drop(final Command pCmd){
         if (!pCmd.hasSecondWord()) {
@@ -329,6 +329,10 @@ public class GameEngine
         this.aPlayer.getCurrentRoom().addItem(vItem);
     }
 
+    /**
+     * Afficher les objets dans joueur.
+     * @param pCmd commande a traiter 
+     */
     private void items(final Command pCmd){
         if (pCmd.hasSecondWord()) {
             this.aGui.println("Items can't be followed by a second word.");

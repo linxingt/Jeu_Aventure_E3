@@ -74,13 +74,17 @@ public class ItemList
     }
 
     /**
-     * @return Item si l'item est supprimé sinon null
-     * @param pItemName
+     * @return Item si l'item est supprime sinon null
+     * @param pItemName nom de l'item à supprimer
      */
     public Item removeItem(final String pItemName){
         return this.aItems.remove(pItemName);
     }
 
+    /**
+     * @param pItemName nom de l'item à verifier
+     * @return si l'item existe dans la collection aItems
+     */
     public boolean hasItem(final String pItemName){
         return this.aItems.containsKey(pItemName);
     }

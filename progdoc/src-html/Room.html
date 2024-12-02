@@ -27,7 +27,7 @@
 <span class="source-line-no">014</span><span id="line-14">    /** les sorties de la salle avec direction et salle correspondante */</span>
 <span class="source-line-no">015</span><span id="line-15">    private HashMap&lt;String, Room&gt; aExits;</span>
 <span class="source-line-no">016</span><span id="line-16">    /** les items de la salle avec nom et item correspondant */</span>
-<span class="source-line-no">017</span><span id="line-17">    private HashMap&lt;String, Item&gt; aItems;</span>
+<span class="source-line-no">017</span><span id="line-17">    private ItemList aItems;</span>
 <span class="source-line-no">018</span><span id="line-18">    /** le nom de l'image de la salle */</span>
 <span class="source-line-no">019</span><span id="line-19">    private String aImgName;</span>
 <span class="source-line-no">020</span><span id="line-20">    </span>
@@ -39,7 +39,7 @@
 <span class="source-line-no">026</span><span id="line-26">    public Room (final String pDescription, final String pImgName) {</span>
 <span class="source-line-no">027</span><span id="line-27">        this.aDescription=pDescription;</span>
 <span class="source-line-no">028</span><span id="line-28">        this.aExits = new HashMap&lt;String, Room&gt;();</span>
-<span class="source-line-no">029</span><span id="line-29">        this.aItems = new HashMap&lt;String, Item&gt;();</span>
+<span class="source-line-no">029</span><span id="line-29">        this.aItems = new ItemList();</span>
 <span class="source-line-no">030</span><span id="line-30">        this.aImgName = pImgName;</span>
 <span class="source-line-no">031</span><span id="line-31">    }</span>
 <span class="source-line-no">032</span><span id="line-32">    </span>
@@ -83,7 +83,7 @@
 <span class="source-line-no">070</span><span id="line-70">     * @param pPlayer joueur actuel</span>
 <span class="source-line-no">071</span><span id="line-71">     */</span>
 <span class="source-line-no">072</span><span id="line-72">    public String getLongDescription(final Player pPlayer){</span>
-<span class="source-line-no">073</span><span id="line-73">       return "You are " + this.aDescription + "\n" + this.getExitString()+ "\n" + this.getItemsNames(pPlayer) + "\n" ;</span>
+<span class="source-line-no">073</span><span id="line-73">       return "You are " + this.aDescription + "\n" + this.getExitString()+ "\n" + this.aItems.getItemsNames("room",pPlayer);</span>
 <span class="source-line-no">074</span><span id="line-74">    }  </span>
 <span class="source-line-no">075</span><span id="line-75">    </span>
 <span class="source-line-no">076</span><span id="line-76">    /**</span>
@@ -94,63 +94,42 @@
 <span class="source-line-no">081</span><span id="line-81">    }</span>
 <span class="source-line-no">082</span><span id="line-82"></span>
 <span class="source-line-no">083</span><span id="line-83">    /**</span>
-<span class="source-line-no">084</span><span id="line-84">     * @return les noms des items dans la salle</span>
-<span class="source-line-no">085</span><span id="line-85">     * @param pPlayer joueur actuel</span>
+<span class="source-line-no">084</span><span id="line-84">     * @param pItemName nom de l'item a retirer</span>
+<span class="source-line-no">085</span><span id="line-85">     * @return l'item retire si l'item existe, sinon null</span>
 <span class="source-line-no">086</span><span id="line-86">     */</span>
-<span class="source-line-no">087</span><span id="line-87">    public String getItemsNames(final Player pPlayer){</span>
-<span class="source-line-no">088</span><span id="line-88">        if(this.aItems.isEmpty()){</span>
-<span class="source-line-no">089</span><span id="line-89">            return "There is no item in this room.";</span>
-<span class="source-line-no">090</span><span id="line-90">        }</span>
-<span class="source-line-no">091</span><span id="line-91">        else{</span>
-<span class="source-line-no">092</span><span id="line-92">            String vString = "You can see the following items:\n";</span>
-<span class="source-line-no">093</span><span id="line-93">            for(String vName : this.aItems.keySet()){</span>
-<span class="source-line-no">094</span><span id="line-94">                boolean vVisible = this.aItems.get(vName).getVisible();</span>
-<span class="source-line-no">095</span><span id="line-95">                if(vVisible||(!vVisible&amp;&amp;(vName.equals("cloth")||vName.equals("cake"))&amp;&amp;pPlayer.getItemsNames().contains("glasses")))</span>
-<span class="source-line-no">096</span><span id="line-96">                    vString += this.aItems.get(vName).getLongName() + "\n";</span>
-<span class="source-line-no">097</span><span id="line-97">            }</span>
-<span class="source-line-no">098</span><span id="line-98">            return vString;</span>
-<span class="source-line-no">099</span><span id="line-99">        }</span>
-<span class="source-line-no">100</span><span id="line-100">    }</span>
-<span class="source-line-no">101</span><span id="line-101"></span>
-<span class="source-line-no">102</span><span id="line-102">    /**</span>
-<span class="source-line-no">103</span><span id="line-103">     * Ajoute un item dans la salle.</span>
-<span class="source-line-no">104</span><span id="line-104">     * @param pDescription description de l'item</span>
-<span class="source-line-no">105</span><span id="line-105">     * @param pWeight poids de l'item</span>
-<span class="source-line-no">106</span><span id="line-106">     * @param pName nom de l'item</span>
-<span class="source-line-no">107</span><span id="line-107">     * @param pCanBePickedUp si l'item peut etre ramasse</span>
-<span class="source-line-no">108</span><span id="line-108">     * @param pCanBeSeen si l'item peut etre vu</span>
-<span class="source-line-no">109</span><span id="line-109">     */</span>
-<span class="source-line-no">110</span><span id="line-110">    public void addItem (final String pDescription, final int pWeight, final String pName, final boolean pCanBePickedUp, final boolean pCanBeSeen){</span>
-<span class="source-line-no">111</span><span id="line-111">        Item vItem = new Item(pDescription, pWeight, pName, pCanBePickedUp, pCanBeSeen);</span>
-<span class="source-line-no">112</span><span id="line-112">        this.aItems.put(pName, vItem);</span>
-<span class="source-line-no">113</span><span id="line-113">    }</span>
-<span class="source-line-no">114</span><span id="line-114"></span>
-<span class="source-line-no">115</span><span id="line-115">    /**</span>
-<span class="source-line-no">116</span><span id="line-116">     * Ajoute un item dans la salle.</span>
-<span class="source-line-no">117</span><span id="line-117">     * @param pItem item a ajouter</span>
-<span class="source-line-no">118</span><span id="line-118">     */</span>
-<span class="source-line-no">119</span><span id="line-119">    public void addItem (final Item pItem){</span>
-<span class="source-line-no">120</span><span id="line-120">        this.aItems.put(pItem.getItemName(), pItem);</span>
-<span class="source-line-no">121</span><span id="line-121">    }</span>
-<span class="source-line-no">122</span><span id="line-122"></span>
-<span class="source-line-no">123</span><span id="line-123">    /**</span>
-<span class="source-line-no">124</span><span id="line-124">     * @return l'item selon le nom saisi</span>
-<span class="source-line-no">125</span><span id="line-125">     * @param pItemName nom de l'item souhaite</span>
-<span class="source-line-no">126</span><span id="line-126">     */</span>
-<span class="source-line-no">127</span><span id="line-127">    public Item getOneItem(final String pItemName){</span>
-<span class="source-line-no">128</span><span id="line-128">        if(this.aItems.containsKey(pItemName))</span>
-<span class="source-line-no">129</span><span id="line-129">            return this.aItems.get(pItemName);</span>
-<span class="source-line-no">130</span><span id="line-130">        return null;</span>
-<span class="source-line-no">131</span><span id="line-131">    }</span>
-<span class="source-line-no">132</span><span id="line-132"></span>
-<span class="source-line-no">133</span><span id="line-133">    /**</span>
-<span class="source-line-no">134</span><span id="line-134">     * Supprime un item de la salle.</span>
-<span class="source-line-no">135</span><span id="line-135">     * @param pItemName nom de l'item a supprimer</span>
-<span class="source-line-no">136</span><span id="line-136">     */</span>
-<span class="source-line-no">137</span><span id="line-137">    public void removeItem(final String pItemName){</span>
-<span class="source-line-no">138</span><span id="line-138">        this.aItems.remove(pItemName);</span>
-<span class="source-line-no">139</span><span id="line-139">    }</span>
-<span class="source-line-no">140</span><span id="line-140">} // Room</span>
+<span class="source-line-no">087</span><span id="line-87">    public Item removeItem(final String pItemName) {</span>
+<span class="source-line-no">088</span><span id="line-88">        return this.aItems.removeItem(pItemName);</span>
+<span class="source-line-no">089</span><span id="line-89">    }</span>
+<span class="source-line-no">090</span><span id="line-90"></span>
+<span class="source-line-no">091</span><span id="line-91">    /**</span>
+<span class="source-line-no">092</span><span id="line-92">     * Ajoute un item dans la salle en passant un objet Item existant.</span>
+<span class="source-line-no">093</span><span id="line-93">     * @param pItem item a ajouter</span>
+<span class="source-line-no">094</span><span id="line-94">     */</span>
+<span class="source-line-no">095</span><span id="line-95">    public void addItem(final Item pItem) {</span>
+<span class="source-line-no">096</span><span id="line-96">        this.aItems.addItem(pItem);</span>
+<span class="source-line-no">097</span><span id="line-97">    }</span>
+<span class="source-line-no">098</span><span id="line-98"></span>
+<span class="source-line-no">099</span><span id="line-99">    /**</span>
+<span class="source-line-no">100</span><span id="line-100">     * @param pItemName nom de l'item a chercher</span>
+<span class="source-line-no">101</span><span id="line-101">     * @return l'item trouve si l'item existe, sinon null</span>
+<span class="source-line-no">102</span><span id="line-102">     */</span>
+<span class="source-line-no">103</span><span id="line-103">    public Item getOneItem(final String pItemName) {</span>
+<span class="source-line-no">104</span><span id="line-104">        return this.aItems.getOneItem(pItemName);</span>
+<span class="source-line-no">105</span><span id="line-105">    }</span>
+<span class="source-line-no">106</span><span id="line-106"></span>
+<span class="source-line-no">107</span><span id="line-107">    /**</span>
+<span class="source-line-no">108</span><span id="line-108">     * Ajoute un item dans la salle en creant un objet Item.</span>
+<span class="source-line-no">109</span><span id="line-109">     * @param pDescription description de l'item</span>
+<span class="source-line-no">110</span><span id="line-110">     * @param pWeight poids de l'item</span>
+<span class="source-line-no">111</span><span id="line-111">     * @param pName nom de l'item</span>
+<span class="source-line-no">112</span><span id="line-112">     * @param pCanBePickedUp si l'item peut etre ramasse</span>
+<span class="source-line-no">113</span><span id="line-113">     * @param pCanBeSeen si l'item peut etre vu</span>
+<span class="source-line-no">114</span><span id="line-114">     */</span>
+<span class="source-line-no">115</span><span id="line-115">    public void addItem(final String pDescription, final int pWeight, final String pName, final boolean pCanBePickedUp, final boolean pCanBeSeen) {</span>
+<span class="source-line-no">116</span><span id="line-116">        this.aItems.addItem(pDescription, pWeight, pName, pCanBePickedUp, pCanBeSeen);</span>
+<span class="source-line-no">117</span><span id="line-117">    }</span>
+<span class="source-line-no">118</span><span id="line-118"></span>
+<span class="source-line-no">119</span><span id="line-119">} // Room</span>
 
 
 
