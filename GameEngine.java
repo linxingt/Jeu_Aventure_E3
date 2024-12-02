@@ -8,8 +8,9 @@ import java.util.Scanner;
  * @author (votre nom)
  * @version (un numero de version ou une date)
  */
-public class GameEngine
-{
+public class GameEngine {
+    /** le nombre maximum de commandes */
+    private static final int MAXNBRCMD = 3;
     /** le joueur */
     private Player aPlayer;
     /** le parser qui analyse les commandes */
@@ -117,8 +118,9 @@ public class GameEngine
         } else{
             this.aPlayer.addPreviousRoom(this.aPlayer.getCurrentRoom());//Pushes a new element on top of this Stack.
             this.aPlayer.setCurrentRoom(vNextRoom);
+            this.aPlayer.setNbrCmdAddOne();
         }
-        this.printLocationInfo();
+        if (!this.limiteCmd()) this.printLocationInfo();
     }
 
     /**
@@ -137,6 +139,8 @@ public class GameEngine
         this.aPlayer.setCurrentRoom(vNextRoom);
         this.aPlayer.removePreviousRoom();//Removes the head element from this Stack.
         this.printLocationInfo();
+        this.aPlayer.setNbrCmdAddOne();
+        this.limiteCmd();
     }
 
     /**
@@ -164,7 +168,8 @@ public class GameEngine
     private void printHelp() {
         this.aGui.println("You are lost. You are alone.\n"
                 + "You wander around at the laboratory.\n\n"
-                + "Your command words are:"+this.aParser.getCommands()+"\n");
+                + "Your command words are:" + this.aParser.getCommands() + "\n"
+                + "!!! You can only use 100 times the following commands: 'go', 'back', 'take' and 'drop'!!!\n");
     }
 
     /**
@@ -194,6 +199,7 @@ public class GameEngine
             return;
         } else if (vCmd.getCommandWord().equals("go")) {
             this.goRoom(vCmd);
+            // nbrCmd+1
         } else if (vCmd.getCommandWord().equals("quit")) {
             this.quit(vCmd);
         } else if (vCmd.getCommandWord().equals("help")) {
@@ -204,12 +210,15 @@ public class GameEngine
             this.eat(vCmd);
         } else if (vCmd.getCommandWord().equals("back")) {
             this.back(vCmd);
+            // nbrCmd+1
         } else if (vCmd.getCommandWord().equals("test")) {
             this.test(vCmd);
         } else if (vCmd.getCommandWord().equals("take")) {
             this.take(vCmd);
+            // nbrCmd+1
         } else if (vCmd.getCommandWord().equals("drop")) {
             this.drop(vCmd);
+            // nbrCmd+1
         } else if (vCmd.getCommandWord().equals("items")) {
             this.items(vCmd);
         } else {
@@ -303,9 +312,11 @@ public class GameEngine
             this.aGui.println("There is no such item in this room.");
             return;
         }
-        if(vItem.getCanBePickedUp()&&this.aPlayer.pickUpItem(vItem, aGui)){
-                this.aPlayer.getCurrentRoom().removeItem(vItemName);
-        }else if(!vItem.getCanBePickedUp()){
+        if (vItem.getCanBePickedUp() && this.aPlayer.pickUpItem(vItem, aGui)) {
+            this.aPlayer.getCurrentRoom().removeItem(vItemName);
+            this.aPlayer.setNbrCmdAddOne();
+            this.limiteCmd();
+        } else if (!vItem.getCanBePickedUp()) {
             this.aGui.println(vItemName + " cannot be picked up.");
         }
     }
@@ -327,6 +338,8 @@ public class GameEngine
         }
         this.aPlayer.dropItem(vItemName, aGui);
         this.aPlayer.getCurrentRoom().addItem(vItem);
+        this.aPlayer.setNbrCmdAddOne();
+        this.limiteCmd();
     }
 
     /**
@@ -338,6 +351,21 @@ public class GameEngine
             this.aGui.println("Items can't be followed by a second word.");
             return; 
         }
-        this.aGui.println(this.aPlayer.getItemsNames()+"\n"+this.aPlayer.getWeightInfo());
+        this.aGui.println(this.aPlayer.getItemsNames() + "\n" + this.aPlayer.getWeightInfo());
+    }
+
+    /**
+     * @return true si le joueur a atteint le nombre maximum de commandes, false
+     *         sinon
+     */
+    private boolean limiteCmd() {
+        if (this.aPlayer.getNbrCmd() >= MAXNBRCMD) {
+            this.aGui.println("Game Over! You have reached the limit of "+MAXNBRCMD+" commands.");
+            this.aGui.enable(false);
+            return true;
+        } else if (MAXNBRCMD - this.aPlayer.getNbrCmd() < 6) {
+            this.aGui.println("Attention! You have only " + (MAXNBRCMD - this.aPlayer.getNbrCmd()) + " commands left.");
+        }
+        return false;
     }
 }

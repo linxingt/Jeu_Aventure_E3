@@ -20,6 +20,8 @@ public class Player
     private int aWeightActual;
     /** le nom du joueur */
     private String aName;
+    /** le nombre de commandes realisees par le joueur */
+    private int aNbrCmd;
 
     /**
      * Constructeur d'objets de classe Player
@@ -31,6 +33,7 @@ public class Player
         this.aPreviousRooms = new Stack<Room>();
         this.aItems = new ItemList();
         this.aWeightAllowed = 100;
+        this.aNbrCmd = 0;
     }
 
     /**
@@ -39,6 +42,21 @@ public class Player
     public String getName()
     {
         return this.aName;
+    }
+
+    /**
+     * @return le nombre de commandes realisees par le joueur
+     */
+    public int getNbrCmd()
+    {
+        return this.aNbrCmd;
+    }
+
+    /**
+     * ajouter 1 au nombre de commandes realisees par le joueur
+     */
+    public void setNbrCmdAddOne(){
+        this.aNbrCmd=this.aNbrCmd+1;
     }
     
     /**
