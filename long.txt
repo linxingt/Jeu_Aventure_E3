@@ -1,16 +1,37 @@
+take glasses
 go south
+look paper
+look plan
+look key
+look cloth
+take key
+take cloth
 go down
 go up
 back
-go west
-go west
-go north
-help
-go east
+back
+back
+back
 go south
+go down
+drop key
+take magicCake
+eat magicCake
+drop glasses
+look
+items
+take key
+take card
+go west
+help
+look whiteboard
+go west
+look cabinet
+go east
 eat
 go south
-back
 look
-go east
-go south
+go north
+go west
+go north
+look bed

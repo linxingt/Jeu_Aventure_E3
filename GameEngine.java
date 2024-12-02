@@ -74,7 +74,7 @@ public class GameEngine
         vClean.setExits("south", vAleatoire);
         vClean.setExits("up", vStorage);
         vClean.addItem("an access card for the experiment room",50,"card",true,true);
-        vClean.addItem("a magic cake that can increase your maximum ability to take things by 20% after eating it", 70,"cake",true,false);
+        vClean.addItem("a magic cake that can increase your maximum ability to take things by 20% after eating it", 60,"magicCake",true,false);
         
         vMeeting.setExits("east", vClean);
         vMeeting.setExits("west", vArchive);
@@ -244,9 +244,15 @@ public class GameEngine
             this.aGui.println("Eat what?");
             return;
         }
-        if(pCmd.getSecondWord()=="cake"){
-            this.aPlayer.setWeightAllowed(120);
-            this.aGui.println("You have eaten the magic cake and now you have "+this.aPlayer.getWeightAllowed()+"% capacity to carry things.");
+        if(pCmd.getSecondWord().equals("magicCake")){
+            if(this.aPlayer.hasItem("magicCake")){
+                this.aPlayer.removeItem("magicCake");
+                this.aPlayer.setWeightAllowed(120);
+                this.aGui.println("You have eaten the magic cake and now you have "+this.aPlayer.getWeightAllowed()+"% capacity to carry things.");
+            }else{
+                this.aGui.println("You don't have the magic cake.");
+                return;
+            }
         }
         else
             this.aGui.println("You have eaten a food imaginary, you are not hungry anymore.");
@@ -297,10 +303,9 @@ public class GameEngine
             this.aGui.println("There is no such item in this room.");
             return;
         }
-        if(vItem.getCanBePickedUp()){
-                this.aPlayer.pickUpItem(vItem, aGui);
+        if(vItem.getCanBePickedUp()&&this.aPlayer.pickUpItem(vItem, aGui)){
                 this.aPlayer.getCurrentRoom().removeItem(vItemName);
-        }else{
+        }else if(!vItem.getCanBePickedUp()){
             this.aGui.println(vItemName + " cannot be picked up.");
         }
     }

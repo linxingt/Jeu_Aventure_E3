@@ -26,8 +26,8 @@ public class ItemList
      */
     public String getItemsNames(final String pType,final Player pPlayer)
     {
-        String vVideMsg = pType=="room"?"There is no item in this room.":"You don't have any items on you.";
-        String vShowMsg = pType=="room"?"You can see the following items:":"You have the following items:";
+        String vVideMsg = pType.equals("room")?"There is no item in this room.":"You don't have any items on you.";
+        String vShowMsg = pType.equals("room")?"You can see the following items:":"You have the following items:";
         if(this.aItems.isEmpty()){
             return vVideMsg;
         }
@@ -35,9 +35,9 @@ public class ItemList
         for (String vItemName : this.aItems.keySet())
         {
             boolean vVisible = this.aItems.get(vItemName).getVisible();
-            boolean vHaveAbleToSee = (vItemName.equals("cloth")||vItemName.equals("cake"))&&pPlayer.getItemsNames().contains("glasses");
-            if(pType=="room"?vVisible||(!vVisible&&vHaveAbleToSee):true)
-                vItemsNames += this.aItems.get(vItemName).getLongName() + "\n";
+            boolean vHaveAbleToSee = (vItemName.equals("cloth")||vItemName.equals("magicCake"))&&pPlayer.hasItem("glasses");
+            if(pType.equals("room")?(vVisible||(!vVisible&&vHaveAbleToSee)):true)
+                vItemsNames += this.aItems.get(vItemName).getLongName() + " . ";
         }
         return vItemsNames;
     }
@@ -79,5 +79,9 @@ public class ItemList
      */
     public Item removeItem(final String pItemName){
         return this.aItems.remove(pItemName);
+    }
+
+    public boolean hasItem(final String pItemName){
+        return this.aItems.containsKey(pItemName);
     }
 }

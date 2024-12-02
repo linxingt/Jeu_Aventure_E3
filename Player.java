@@ -80,17 +80,19 @@ public class Player
      * @param pItem item a ramasser
      * @param pGui interface graphique pour afficher des messages
      */
-    public void pickUpItem(final Item pItem, final UserInterface pGui)
+    public boolean pickUpItem(final Item pItem, final UserInterface pGui)
     {
         if(pItem.getItemWeight()+this.aWeightActual > this.aWeightAllowed)
         {
             pGui.println("You can't pick up this item, you are reaching the 100% of your weight capacity.");
+            return false;
         }
         else
         {
             this.aItems.addItem(pItem);
             this.aWeightActual += pItem.getItemWeight();
             pGui.println("You picked up the item: " + pItem.getItemName());
+            return true;
         }
     }
 
@@ -161,5 +163,14 @@ public class Player
 
     public String getItemsNames() {
         return this.aItems.getItemsNames("player",this);
+    }
+
+    public void removeItem(String vItemName) {
+        Item vItem=this.aItems.removeItem(vItemName);
+        this.aWeightActual -= vItem.getItemWeight();
+    }
+
+    public boolean hasItem(String pItemName) {
+        return this.aItems.hasItem(pItemName);
     }
 }

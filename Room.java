@@ -70,7 +70,7 @@ public class Room
      * @param pPlayer joueur actuel
      */
     public String getLongDescription(final Player pPlayer){
-       return "You are " + this.aDescription + "\n" + this.getExitString()+ "\n" + this.aItems.getItemsNames("room",pPlayer) + "\n" ;
+       return "You are " + this.aDescription + "\n" + this.getExitString()+ "\n" + this.aItems.getItemsNames("room",pPlayer);
     }  
     
     /**

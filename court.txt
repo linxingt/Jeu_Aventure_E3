@@ -1,5 +1,6 @@
 go south
 go down
+take card
 go west
 go west
 go north
