@@ -1,31 +1,31 @@
 /**
- *  This class is the main class of the "World of Zuul" application. 
- *  "World of Zuul" is a very simple, text based adventure game.  Users 
- *  can walk around some scenery. That's all. It should really be extended 
- *  to make it more interesting!
+ * This class is the main class of the "World of Zuul" application.
+ * "World of Zuul" is a very simple, text based adventure game. Users
+ * can walk around some scenery. That's all. It should really be extended
+ * to make it more interesting!
  * 
- *  To play this game, create an instance of this class.
+ * To play this game, create an instance of this class.
  * 
- *  This main class creates the necessary implementation objects and starts the game off.
+ * This main class creates the necessary implementation objects and starts the
+ * game off.
  * 
- * @author  Michael Kolling and David J. Barnes
+ * @author Michael Kolling and David J. Barnes
  * @version 2.0 (Jan 2003) DB edited (2019)
  */
 
-public class Game
-{
+public class Game {
     /** une interface utilisateur avec laquelle l'utilisateur peut interagir */
     private UserInterface aGui;
     /** un moteur de jeu qui gere la fonctionnalite du jeu */
     private GameEngine aEngine;
 
     /**
-     * Create the game and initialise its internal map. Create the inerface and link to it.
+     * Create the game and initialise its internal map. Create the inerface and link
+     * to it.
      */
-    public Game() 
-    {
+    public Game() {
         this.aEngine = new GameEngine();
-        this.aGui = new UserInterface( this.aEngine );
-        this.aEngine.setGUI( this.aGui );
+        this.aGui = new UserInterface(this.aEngine);
+        this.aEngine.setGUI(this.aGui);
     }
 }

@@ -129,7 +129,15 @@
 <span class="source-line-no">116</span><span id="line-116">        this.aItems.addItem(pDescription, pWeight, pName, pCanBePickedUp, pCanBeSeen);</span>
 <span class="source-line-no">117</span><span id="line-117">    }</span>
 <span class="source-line-no">118</span><span id="line-118"></span>
-<span class="source-line-no">119</span><span id="line-119">} // Room</span>
+<span class="source-line-no">119</span><span id="line-119">    /**</span>
+<span class="source-line-no">120</span><span id="line-120">     * @param pRoom salle a chercher</span>
+<span class="source-line-no">121</span><span id="line-121">     * @return si la salle est une sortie de la salle actuelle</span>
+<span class="source-line-no">122</span><span id="line-122">     */</span>
+<span class="source-line-no">123</span><span id="line-123">    public boolean isExit(final Room pRoom) {</span>
+<span class="source-line-no">124</span><span id="line-124">        return this.aExits.containsValue(pRoom);</span>
+<span class="source-line-no">125</span><span id="line-125">    }</span>
+<span class="source-line-no">126</span><span id="line-126"></span>
+<span class="source-line-no">127</span><span id="line-127">} // Room</span>
 
 
 
