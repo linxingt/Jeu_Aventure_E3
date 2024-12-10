@@ -163,11 +163,11 @@ public class Player {
     }
 
     /**
-     * @param vItemName nom de l'item que le joueur veut obtenir
+     * @param pItemName nom de l'item que le joueur veut obtenir
      * @return l'item que le joueur veut obtenir
      */
-    public Item getOneItem(String vItemName) {
-        return this.aItems.getOneItem(vItemName);
+    public Item getOneItem(final String pItemName) {
+        return this.aItems.getOneItem(pItemName);
     }
 
     /**
@@ -180,10 +180,10 @@ public class Player {
     /**
      * supprimer un item du joueur
      * 
-     * @param vItemName nom de l'item a retirer
+     * @param pItemName nom de l'item a retirer
      */
-    public void removeItem(String vItemName) {
-        Item vItem = this.aItems.removeItem(vItemName);
+    public void removeItem(final String pItemName) {
+        Item vItem = this.aItems.removeItem(pItemName);
         this.aWeightActual -= vItem.getItemWeight();
     }
 
@@ -191,7 +191,7 @@ public class Player {
      * @param pItemName nom de l'item
      * @return si le joueur a l'item
      */
-    public boolean hasItem(String pItemName) {
+    public boolean hasItem(final String pItemName) {
         return this.aItems.hasItem(pItemName);
     }
 
@@ -200,5 +200,54 @@ public class Player {
      */
     public void removeAllPreviousRooms() {
         this.aPreviousRooms.clear();
+    }
+
+    /**
+     * charger le beamer dans la salle actuelle
+     * 
+     * @param pGui interface graphique pour afficher des messages
+     */
+    public void chargeBeamer(final UserInterface pGui) {
+        Beamer vBeamer = (Beamer) this.getOneItem("beamer");
+        if (vBeamer != null) {
+            if (vBeamer.getIsUsed())
+                pGui.println("The beamer has been used and can't be charged anymore.");
+            else if (vBeamer.chargeBeamer(this.aCurrentRoom))
+                pGui.println("The beamer is charged for the current room: " + vBeamer.getRoomCharged().getRoomName());
+            else
+                pGui.println("The beamer is already charged in " + vBeamer.getRoomCharged().getRoomName());
+        } else
+            pGui.println("You don't have the beamer to charge.");
+    }
+
+    /**
+     * utiliser le beamer
+     * 
+     * @return si le beamer a ete utilise avec succes
+     * @param pGui interface graphique pour afficher des messages
+     */
+    public boolean fireBeamer(final UserInterface pGui) {
+        Beamer vBeamer = (Beamer) this.getOneItem("beamer");
+        if (vBeamer != null) {
+            if (vBeamer.getIsUsed()) {
+                pGui.println("The beamer has been used and can't be used anymore.");
+                return false;
+            }
+            Room vNextRoom = vBeamer.fireBeamer(this.aCurrentRoom);
+            if (vNextRoom == null) {
+                pGui.println(
+                        "The beamer can't be used without being charged or in the same room where it was charged.");
+                return false;
+            } else {
+                this.aCurrentRoom = vNextRoom;
+                this.removeAllPreviousRooms();
+                pGui.println(
+                        "You have been teleported to the room charged: " + vNextRoom.getRoomName()
+                                + ".\nAttention! You can't back after using the beamer.");
+                return true;
+            }
+        } else
+            pGui.println("You don't have the beamer to fire.");
+        return false;
     }
 }

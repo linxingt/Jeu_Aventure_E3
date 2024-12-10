@@ -10,7 +10,7 @@ import java.util.Scanner;
  */
 public class GameEngine {
     /** le nombre maximum de commandes */
-    private static final int MAXNBRCMD = 100;
+    private static final int CMAXNBRCMD = 100;
     /** le joueur */
     private Player aPlayer;
     /** le parser qui analyse les commandes */
@@ -45,30 +45,30 @@ public class GameEngine {
      */
     private void createRooms() {
         Room vOutside = new Room(
-                "standing outside the secret laboratory, \nthe entrance looming ahead with an air of mystery and danger.",
+                "standing outside the secret laboratory, the entrance looming ahead with an air of mystery and danger.",
                 "entrance.jpg");
         Room vStorage = new Room(
-                "in a cluttered storage room, \nfilled with various discarded objects and tools.", "storage.jpg");
+                "in a cluttered storage room, filled with various discarded objects and tools.", "storage.jpg");
         Room vClean = new Room(
-                "in the clean room, \na sterile area where disinfection and changing take place. \nThe air smells faintly of chemicals, \nand a row of lockers lines the wall.",
+                "in the clean room, a sterile area where disinfection and changing take place. \nThe air smells faintly of chemicals, and a row of lockers lines the wall.",
                 "clean.jpg");
         Room vMeeting = new Room(
-                "in the meeting room, \nwhere scientists plan their experiments. \nA large table and chairs dominate the space, \nand diagrams cover the walls.",
+                "in the meeting room, where scientists plan their experiments. \nA large table and chairs dominate the space, and diagrams cover the walls.",
                 "meeting.jpg");
         Room vPrison = new Room(
-                "in the prison room, \nwhere human subjects are held in confinement. \nThe air feels heavy with tension.",
+                "in the prison room, where human subjects are held in confinement. The air feels heavy with tension.",
                 "prison.jpg");
         Room vAnimal = new Room(
-                "in the animal room, a isolated space \nwhere animals, transformed by experiments, are kept in cages. \nThe room is eerily quiet.",
+                "in the animal room, a isolated space where animals, transformed by experiments, are kept in cages. \nThe room is eerily quiet.",
                 "animal.jpg");
         Room vArchive = new Room(
-                " in the archive room, a space \nfilled with shelves of files and records. \nEach document holds secrets about the experiments conducted here.",
+                " in the archive room, a space filled with shelves of files and records. \nEach document holds secrets about the experiments conducted here.",
                 "archive.jpg");
         Room vExperimentation = new Room(
-                "in the experimentation room, \nwhere the darkest of the laboratory's procedures are carried out. \nSurgical beds and strange equipment fill the space.",
-                "exprience.png");
+                "in the experimentation room, where the darkest of the laboratory's procedures are carried out. \nSurgical beds and strange equipment fill the space.",
+                "experimentation.png");
         Room vGarden = new Room(
-                "in a garden, with flowers blooming beautifully \nbut with a rancid smell.", "garden.jpg");
+                "in a garden, with flowers blooming beautifully but with a rancid smell.", "garden.jpg");
         Room vAleatoire = vAnimal; // random room, pas encore fait
 
         vOutside.setExits("south", vStorage);
@@ -122,6 +122,7 @@ public class GameEngine {
         vExperimentation.setExits("east", vAnimal);
         vExperimentation.setExits("south", vArchive);
         vExperimentation.addItem("a bed with a small sign saying 2566", 300, "bed", false, true);
+        vExperimentation.addItem(new Beamer("beamer"));
 
         aPlayer.setCurrentRoom(vOutside);
     }
@@ -199,10 +200,9 @@ public class GameEngine {
      * Afficher les informations d'aide.
      */
     private void printHelp() {
-        this.aGui.println("You are lost. You are alone.\n"
-                + "You wander around at the laboratory.\n\n"
+        this.aGui.println("You are lost. You are alone. You wander around at the laboratory.\n\n"
                 + "Your command words are:" + this.aParser.getCommands() + "\n"
-                + "!!! You can only use 100 times the following commands: 'go', 'back', 'take' and 'drop'!!!\n");
+                + "Attention!!! You can only use 100 times the following commands: 'go', 'back', 'take' and 'drop'!!!\n");
     }
 
     /**
@@ -256,6 +256,10 @@ public class GameEngine {
             // nbrCmd+1
         } else if (vCmd.getCommandWord().equals("items")) {
             this.items(vCmd);
+        } else if (vCmd.getCommandWord().equals("charge")) {
+            this.charge(vCmd);
+        } else if (vCmd.getCommandWord().equals("fire")) {
+            this.fire(vCmd);
         } else {
             this.aGui.println("I don't know what you mean...");
         }
@@ -323,7 +327,8 @@ public class GameEngine {
             } // while
         } // try
         catch (final FileNotFoundException pFNFE) { // si le fichier n'existe pas
-            /// traitement en cas d'exception
+            // traitement en cas d'exception
+            this.aGui.println("You can't test this file because it doesn't exist.");
         } // catch
         finally {
             if (vSc != null) {
@@ -398,13 +403,41 @@ public class GameEngine {
      *         sinon
      */
     private boolean limiteCmd() {
-        if (this.aPlayer.getNbrCmd() >= MAXNBRCMD) {
-            this.aGui.println("Game Over! You have reached the limit of " + MAXNBRCMD + " commands.");
+        if (this.aPlayer.getNbrCmd() >= CMAXNBRCMD) {
+            this.aGui.println("Game Over! You have reached the limit of " + CMAXNBRCMD + " commands.");
             this.aGui.enable(false);
             return true;
-        } else if (MAXNBRCMD - this.aPlayer.getNbrCmd() < 6) {
-            this.aGui.println("Attention! You have only " + (MAXNBRCMD - this.aPlayer.getNbrCmd()) + " commands left.");
+        } else if (CMAXNBRCMD - this.aPlayer.getNbrCmd() < 6) {
+            this.aGui
+                    .println("Attention! You have only " + (CMAXNBRCMD - this.aPlayer.getNbrCmd()) + " commands left.");
         }
         return false;
+    }
+
+    /**
+     * Charger le beamer.
+     * 
+     * @param pCmd commande a traiter
+     */
+    private void charge(final Command pCmd) {
+        if (pCmd.hasSecondWord()) {
+            this.aGui.println("Charge can't be followed by a second word because only the beamer can be charged.");
+            return;
+        }
+        this.aPlayer.chargeBeamer(this.aGui);
+    }
+
+    /**
+     * Utiliser le beamer.
+     * 
+     * @param pCmd commande a traiter
+     */
+    private void fire(final Command pCmd) {
+        if (pCmd.hasSecondWord()) {
+            this.aGui.println("Fire can't be followed by a second word because only the beamer can be fired.");
+            return;
+        }
+        if (this.aPlayer.fireBeamer(this.aGui))
+            this.printLocationInfo();
     }
 }

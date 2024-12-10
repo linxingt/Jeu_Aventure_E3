@@ -130,4 +130,20 @@ public class Room {
         return this.aExits.containsValue(pRoom);
     }
 
+    /**
+     * @return le nom de la salle
+     */
+    public String getRoomName() {
+        String vRes = "";
+        int vDotIndex = this.aImgName.indexOf('.');
+        String vBeforeDot = this.aImgName.substring(0, vDotIndex);
+        vRes += vBeforeDot.substring(0, 1).toUpperCase() + vBeforeDot.substring(1);
+        if (vBeforeDot.equals("garden") || vBeforeDot.equals("entrance"))
+            return vRes;
+        else {
+            vRes += " room";
+            return vRes;
+        }
+    }
+
 } // Room
