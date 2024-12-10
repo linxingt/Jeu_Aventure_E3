@@ -10,7 +10,7 @@ import java.util.Scanner;
  */
 public class GameEngine {
     /** le nombre maximum de commandes */
-    private static final int MAXNBRCMD = 3;
+    private static final int MAXNBRCMD = 100;
     /** le joueur */
     private Player aPlayer;
     /** le parser qui analyse les commandes */
@@ -23,8 +23,9 @@ public class GameEngine {
      */
     public GameEngine()
     {
-        String vPrenom = javax.swing.JOptionPane.showInputDialog( "What's your name?" );
-        this.aPlayer = new Player( vPrenom );
+        // String vPrenom = javax.swing.JOptionPane.showInputDialog( "What's your name?" );
+        // this.aPlayer = new Player( vPrenom );
+        this.aPlayer = new Player( );
         this.createRooms();
         this.aParser = new Parser();
     }
@@ -59,6 +60,8 @@ public class GameEngine {
                 " in the archive room, a space \nfilled with shelves of files and records. \nEach document holds secrets about the experiments conducted here.","archive.jpg");
         Room vExperimentation = new Room(
                 "in the experimentation room, \nwhere the darkest of the laboratory's procedures are carried out. \nSurgical beds and strange equipment fill the space.","exprience.png");
+        Room vGarden = new Room(
+                "in a garden, with flowers blooming beautifully \nbut with a rancid smell.","garden.jpg");
         Room vAleatoire = vAnimal; // random room, pas encore fait
 
         vOutside.setExits("south", vStorage);
@@ -80,10 +83,12 @@ public class GameEngine {
         vMeeting.setExits("east", vClean);
         vMeeting.setExits("west", vArchive);
         vMeeting.setExits("south", vPrison);
-        vMeeting.setExits("north", vAnimal);
         vMeeting.addItem("a whiteboard displays a discussion about which animal to place 2566's soul into, along with a prominent slogan",500,"whiteboard",false,true);
 
         vPrison.setExits("north", vMeeting);
+        vPrison.setExits("west", vGarden);
+
+        vGarden.setExits("east", vPrison);
 
         vAnimal.setExits("west", vExperimentation);
         vAnimal.setExits("south", vMeeting);
@@ -91,6 +96,7 @@ public class GameEngine {
 
         vArchive.setExits("east", vMeeting);
         vArchive.setExits("north", vExperimentation);
+        vArchive.setExits("south", vGarden);
         vArchive.addItem("a cabinet with a lock", 900,"cabinet",false,true);
         //attends key open cabinet
         //"You use the key to open the cabinet and find a lot of \nexperimenter information, sorted by name. You easily find \nAlice's information and find that her name and photo are \nthe same as your missing sister. You also find that the latest information \nindicates that she will be sent to the laboratory within a week. \nWhen flipping through the information, you find that the \nearliest information about this laboratory appears in 2050. \nYou suspect that this is the year the laboratory was founded. \nA piece of paper with August 9, 2050 written on it falls \nfrom the book, proving your guess."
@@ -116,6 +122,8 @@ public class GameEngine {
         if(vNextRoom==null){
             this.aGui.println("There is no door !");
         } else{
+            if(!vNextRoom.isExit(this.aPlayer.getCurrentRoom()))
+                this.aPlayer.removeAllPreviousRooms();
             this.aPlayer.addPreviousRoom(this.aPlayer.getCurrentRoom());//Pushes a new element on top of this Stack.
             this.aPlayer.setCurrentRoom(vNextRoom);
             this.aPlayer.setNbrCmdAddOne();
@@ -133,6 +141,9 @@ public class GameEngine {
             return;
         }else if(this.aPlayer.PreviousRoomIsEmpty()){
             this.aGui.println("There's nowhere you can go back to.");
+            return;
+        }else if(!this.aPlayer.getCurrentRoom().isExit(this.aPlayer.getPreviousRoom())){
+            this.aGui.println("You can't back on the one-way road.");
             return;
         }
         Room vNextRoom = this.aPlayer.getPreviousRoom();//Returns the head element without modifying the Stack.

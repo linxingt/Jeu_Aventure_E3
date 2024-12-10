@@ -25,11 +25,10 @@ public class Player
 
     /**
      * Constructeur d'objets de classe Player
-     * @param pName nom du joueur
      */
-    public Player(final String pName)
+    public Player()
     {
-        this.aName = pName;
+        // this.aName = pName;
         this.aPreviousRooms = new Stack<Room>();
         this.aItems = new ItemList();
         this.aWeightAllowed = 100;
@@ -206,5 +205,12 @@ public class Player
      */
     public boolean hasItem(String pItemName) {
         return this.aItems.hasItem(pItemName);
+    }
+    
+    /**
+     * supprimer toutes les salles precedentes du joueur
+     */
+    public void removeAllPreviousRooms(){
+        this.aPreviousRooms.clear();
     }
 }

@@ -116,4 +116,12 @@ public class Room
         this.aItems.addItem(pDescription, pWeight, pName, pCanBePickedUp, pCanBeSeen);
     }
 
+    /**
+     * @param pRoom salle a chercher
+     * @return si la salle est une sortie de la salle actuelle
+     */
+    public boolean isExit(final Room pRoom) {
+        return this.aExits.containsValue(pRoom);
+    }
+
 } // Room
