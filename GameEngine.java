@@ -121,7 +121,11 @@ public class GameEngine {
 
         vExperimentation.setExits("east", vAnimal);
         vExperimentation.setExits("south", vArchive);
-        vExperimentation.addItem("a bed with a small sign saying 2566", 300, "bed", false, true);
+        vExperimentation.addItem("a bed with a '2566' mark on it", 300, "bed", false, true);
+        vExperimentation.addItem("a little girl sleeping in bed", 50, "girl", true, true);
+        vExperimentation.addItem("a cat dozing in a cage", 50, "cat", true, true);
+        vExperimentation.addItem("a rabbit eating grass in a cage", 50, "rabbit", true, true);
+        vExperimentation.addItem("a dog in a cage biting the cage", 50, "dog", true, true);
         vExperimentation.addItem(new Beamer("beamer"));
 
         aPlayer.setCurrentRoom(vOutside);

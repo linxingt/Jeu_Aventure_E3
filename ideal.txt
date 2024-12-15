@@ -18,3 +18,19 @@ go north
 go west
 go north
 look bed
+drop key
+take beamer
+go east
+go south
+go east
+go up
+go north
+charge
+go south
+go down
+go west
+go west
+go north
+drop card
+take cat
+fire

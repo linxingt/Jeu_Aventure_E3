@@ -30,8 +30,48 @@ look cabinet
 go east
 eat
 go south
+back
+go west
+go south
+back
+go east
+go north
+go south
 look
 go north
 go west
 go north
 look bed
+drop key
+look beamer
+take beamer
+look girl
+look cat 
+look rabbit
+look dog
+items
+go east
+go south
+back
+go west
+back
+go east
+go up
+go north
+charge
+drop beamer
+look beamer
+take beamer
+go south
+go down
+help
+go west
+charge
+drop beamer
+look beamer
+take beamer
+go west
+go north
+drop card
+take cat
+fire
