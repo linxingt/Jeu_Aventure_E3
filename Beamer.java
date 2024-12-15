@@ -15,6 +15,8 @@ public class Beamer extends Item {
 
     /**
      * Constructeur d'objets de classe Beamer
+     * 
+     * @param pName nom de beamer
      */
     public Beamer(final String pName) {
         super("A beamer is a device that can be charged (only one time), and fired (only one time). \nWhen you charge the beamer, it memorizes the current room. When you fire the beamer, it transports you immediately back to the room it was charged in, then commande back will be disabled.",
@@ -39,10 +41,9 @@ public class Beamer extends Item {
     }
 
     /**
-     * @return la salle chardee/de destination si le beamer peut etre utilise, null
+     * @return la salle chargee/destination si le beamer peut etre utilise, null
      *         sinon
      * @param pCurrentRoom salle actuelle
-     * @param pDestiRoom   salle de destination
      */
     public Room fireBeamer(final Room pCurrentRoom) {
         if (this.aIsCharged && !pCurrentRoom.getImgName().equals(aRoomCharged.getImgName())) {
