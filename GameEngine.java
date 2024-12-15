@@ -1,11 +1,12 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
  * Decrivez votre classe GameEngine ici.
  *
- * @author (votre nom)
+ * @author LIN Xingtong
  * @version (un numero de version ou une date)
  */
 public class GameEngine {
@@ -17,6 +18,8 @@ public class GameEngine {
     private Parser aParser;
     /** l'interface utilisateur */
     private UserInterface aGui;
+    /** les salles du jeu */
+    private ArrayList<Room> aRooms;
 
     /**
      * Constructeur d'objets de classe GameEngine
@@ -25,6 +28,7 @@ public class GameEngine {
         // String vPrenom = javax.swing.JOptionPane.showInputDialog( "What's your name?"
         // );
         // this.aPlayer = new Player( vPrenom );
+        this.aRooms = new ArrayList<Room>();
         this.aPlayer = new Player();
         this.createRooms();
         this.aParser = new Parser();
@@ -69,7 +73,20 @@ public class GameEngine {
                 "experimentation.png");
         Room vGarden = new Room(
                 "in a garden, with flowers blooming beautifully but with a rancid smell.", "garden.jpg");
-        Room vAleatoire = vAnimal; // random room, pas encore fait
+
+        // les salles possibles pour la salle aleatoire (vTransporter)
+        aRooms.add(vStorage);
+        aRooms.add(vClean);
+        aRooms.add(vMeeting);
+        aRooms.add(vArchive);
+
+        aRooms.add(vOutside);
+        aRooms.add(vPrison);
+        aRooms.add(vAnimal);
+        aRooms.add(vExperimentation);
+        aRooms.add(vGarden);
+
+        Room vTransporter = new TransporterRoom("transporter.jpg", this.aRooms); // random room, pas encore fait
 
         vOutside.setExits("south", vStorage);
         vOutside.addItem("an old pair of glasses without lenses. Wearing it can make you see things differently", 40,
@@ -83,7 +100,7 @@ public class GameEngine {
         vStorage.addItem("a plan of the entire laboratory but broken", 10, "plan", false, true);
 
         vClean.setExits("west", vMeeting);
-        vClean.setExits("south", vAleatoire);
+        vClean.setExits("south", vTransporter);
         vClean.setExits("up", vStorage);
         vClean.addItem("an access card for the experiment room", 50, "card", true, true);
         vClean.addItem("a magic cake that can increase your maximum ability to take things by 20% after eating it", 60,
@@ -168,7 +185,8 @@ public class GameEngine {
         } else if (this.aPlayer.PreviousRoomIsEmpty()) {
             this.aGui.println("There's nowhere you can go back to.");
             return;
-        } else if (!this.aPlayer.getCurrentRoom().isExit(this.aPlayer.getPreviousRoom())) {
+        } else if (!this.aPlayer.getCurrentRoom().isExit(this.aPlayer.getPreviousRoom())
+                || this.aPlayer.getPreviousRoom() instanceof TransporterRoom) {
             this.aGui.println("You can't back on the one-way road.");
             return;
         }
