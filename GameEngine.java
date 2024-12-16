@@ -20,6 +20,8 @@ public class GameEngine {
     private UserInterface aGui;
     /** les salles du jeu */
     private ArrayList<Room> aRooms;
+    /** true si le jeu est en mode test, false sinon */
+    private boolean aInTestMode;
 
     /**
      * Constructeur d'objets de classe GameEngine
@@ -75,18 +77,19 @@ public class GameEngine {
                 "in a garden, with flowers blooming beautifully but with a rancid smell.", "garden.jpg");
 
         // les salles possibles pour la salle aleatoire (vTransporter)
-        aRooms.add(vStorage);
-        aRooms.add(vClean);
-        aRooms.add(vMeeting);
-        aRooms.add(vArchive);
+        this.aRooms.add(vStorage);
+        this.aRooms.add(vClean);
+        this.aRooms.add(vMeeting);
+        this.aRooms.add(vArchive);
 
-        aRooms.add(vOutside);
-        aRooms.add(vPrison);
-        aRooms.add(vAnimal);
-        aRooms.add(vExperimentation);
-        aRooms.add(vGarden);
+        this.aRooms.add(vOutside);
+        this.aRooms.add(vPrison);
+        this.aRooms.add(vAnimal);
+        this.aRooms.add(vExperimentation);
+        this.aRooms.add(vGarden);
 
         Room vTransporter = new TransporterRoom("transporter.jpg", this.aRooms); // random room, pas encore fait
+        this.aRooms.add(vTransporter);
 
         vOutside.setExits("south", vStorage);
         vOutside.addItem("an old pair of glasses without lenses. Wearing it can make you see things differently", 40,
@@ -282,6 +285,8 @@ public class GameEngine {
             this.charge(vCmd);
         } else if (vCmd.getCommandWord().equals("fire")) {
             this.fire(vCmd);
+        } else if (vCmd.getCommandWord().equals("alea")) {
+            this.alea(vCmd);
         } else {
             this.aGui.println("I don't know what you mean...");
         }
@@ -341,6 +346,7 @@ public class GameEngine {
             return;
         }
         Scanner vSc = null;
+        this.aInTestMode = true;
         try { // pour "essayer" les instructions suivantes :
             vSc = new Scanner(new File(pCmd.getSecondWord() + ".txt")); // ouverture du fichier s'il existe
             while (vSc.hasNextLine()) { // tant qu'il y a encore une ligne a lire dans le fichier
@@ -353,6 +359,7 @@ public class GameEngine {
             this.aGui.println("You can't test this file because it doesn't exist.");
         } // catch
         finally {
+            this.aInTestMode = false;
             if (vSc != null) {
                 vSc.close();
                 return;
@@ -461,5 +468,25 @@ public class GameEngine {
         }
         if (this.aPlayer.fireBeamer(this.aGui))
             this.printLocationInfo();
+    }
+
+    public void alea(final Command pCmd) {
+        if (!this.aInTestMode) {
+            this.aGui.println("You can't use the alea command because you are not in test mode.");
+            return;
+        } else if (this.aPlayer.getCurrentRoom() instanceof TransporterRoom) {
+            this.aGui.println("You are in the transporter room, you can't use the alea command.");
+            return;
+        }
+
+        TransporterRoom vRoom = (TransporterRoom) this.aRooms.get(aRooms.size() - 1);
+        if (pCmd.hasSecondWord()) {
+            Integer vIndex = Integer.parseInt(pCmd.getSecondWord());
+            if (!(vIndex >= 0 && vIndex < RoomRandomizer.NB_ROOMS))
+                this.aGui.println("The index of the room must be between 0 and " + (RoomRandomizer.NB_ROOMS - 1) + ".");
+            vRoom.setIndexRoom(vIndex);
+        } else {
+            vRoom.setIndexRoom(null);
+        }
     }
 }

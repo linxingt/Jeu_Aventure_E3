@@ -9,6 +9,8 @@ import java.util.List;
 public class TransporterRoom extends Room {
     /** Liste des salles */
     private List<Room> aRooms;
+    /** Index de la salle qu'on veut aller selon cmd alea */
+    private Integer aIndexTestRoom;
 
     /**
      * Constructeur d'objets de classe TransporterRoom
@@ -22,13 +24,17 @@ public class TransporterRoom extends Room {
         this.aRooms = pRooms;
     }
 
+    public void setIndexRoom(final Integer pIndex) {
+        this.aIndexTestRoom = pIndex;
+    }
+
     /**
      * @param pDirection direction
      * @return une salle aleatoire
      */
     @Override
     public Room getExit(final String pDirection) {
-        return RoomRandomizer.findRandomRoom(aRooms);
+        return RoomRandomizer.findRandomRoom(aRooms, this.aIndexTestRoom);
     }
 
     /**

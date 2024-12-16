@@ -72,6 +72,17 @@ look beamer
 take beamer
 go west
 go north
-drop card
-take cat
-fire
+go south
+go east
+go east
+alea 0
+go south
+go 0storage
+go down
+alea 2
+go south
+go 2meeting
+alea
+go east
+go south
+go vrmAlea

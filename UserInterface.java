@@ -38,6 +38,8 @@ public class UserInterface implements ActionListener {
     private JLabel aImage;
     /** un tableau de boutons pour les directions */
     private JButton[] aBtsGo;
+    /** un bouton pour revenir en arriere */
+    private JButton aBtBack;
     /** un tableau contenant les directions possibles */
     private String[] vDirections = { "North", "South", "West", "East", "Up", "Down" };
 
@@ -98,12 +100,17 @@ public class UserInterface implements ActionListener {
         if (pOnOff) { // enable
             this.aEntryField.getCaret().setBlinkRate(500); // cursor blink
             this.aEntryField.addActionListener(this); // reacts to entry
+            for (int i = 0; i < vDirections.length; i++) {
+                this.aBtsGo[i].addActionListener(this);
+            }
+            this.aBtBack.addActionListener(this);
         } else { // disable
             this.aEntryField.getCaret().setBlinkRate(0); // cursor won't blink
             this.aEntryField.removeActionListener(this); // won't react to entry
             for (int i = 0; i < vDirections.length; i++) {
-                aBtsGo[i].removeActionListener(this);
+                this.aBtsGo[i].removeActionListener(this);
             }
+            this.aBtBack.removeActionListener(this);
         }
     } // enable(.)
 
@@ -127,10 +134,14 @@ public class UserInterface implements ActionListener {
 
         this.aBtsGo = new JButton[vDirections.length];
         for (int i = 0; i < vDirections.length; i++) {
-            aBtsGo[i] = new JButton(vDirections[i]);
-            vEastPanel.add(aBtsGo[i]);
-            aBtsGo[i].addActionListener(this);
+            this.aBtsGo[i] = new JButton(vDirections[i]);
+            vEastPanel.add(this.aBtsGo[i]);
+            this.aBtsGo[i].addActionListener(this);
         }
+
+        this.aBtBack = new JButton("Back");
+        vEastPanel.add(this.aBtBack);
+        this.aBtBack.addActionListener(this);
 
         JPanel vPanel = new JPanel();
         vPanel.setLayout(new BorderLayout()); // ==> only five places
@@ -163,11 +174,11 @@ public class UserInterface implements ActionListener {
      */
     @Override
     public void actionPerformed(final ActionEvent pE) {
-        // no need to check the type of action at the moment
-        // because there is only one possible action (text input) :
         String vBtnName = pE.getActionCommand();
         if (Arrays.asList(vDirections).contains(vBtnName)) {
             this.aEngine.interpretCommand("go " + vBtnName.toLowerCase());
+        } else if (vBtnName.equals("Back")) {
+            this.aEngine.interpretCommand("back");
         } else
             this.processCommand(); // never suppress this line
     } // actionPerformed(.)
