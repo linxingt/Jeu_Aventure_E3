@@ -1,9 +1,9 @@
 
 /**
- * Decrivez votre classe Beamer ici.
+ * Beamer est un objet special qui peut etre charge et utilise pour teleporter le joueur
  *
- * @author (votre nom)
- * @version (un numero de version ou une date)
+ * @author LIN Xingtong
+ * @version 12/2024
  */
 public class Beamer extends Item {
     /** si le beamer est charge */
@@ -32,7 +32,7 @@ public class Beamer extends Item {
      * @param pRoom salle a charger
      */
     public boolean chargeBeamer(final Room pRoom) {
-        if (!aIsCharged) {
+        if (!this.aIsCharged) {
             this.aRoomCharged = pRoom;
             this.aIsCharged = true;
             return true;
@@ -46,7 +46,7 @@ public class Beamer extends Item {
      * @param pCurrentRoom salle actuelle
      */
     public Room fireBeamer(final Room pCurrentRoom) {
-        if (this.aIsCharged && !pCurrentRoom.getImgName().equals(aRoomCharged.getImgName())) {
+        if (this.aIsCharged && !pCurrentRoom.getImgName().equals(this.aRoomCharged.getImgName())) {
             this.aIsUsed = true;
             return this.aRoomCharged;
         }
@@ -58,7 +58,7 @@ public class Beamer extends Item {
      */
     @Override
     public String getItemDescription() {
-        if (aIsUsed)
+        if (this.aIsUsed)
             return "a beamer has only one time to use, you can't use it anymore";
         else
             return super.getItemDescription();

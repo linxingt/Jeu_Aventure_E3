@@ -1,9 +1,9 @@
 
 /**
- * Decrivez votre classe Item ici.
+ * Cette classe est utilisee pour stocker les informations d'un objet
  *
- * @author (votre nom)
- * @version (un numero de version ou une date)
+ * @author LIN Xingtong
+ * @version 12/2024
  */
 public class Item {
     /** description de l'objet */

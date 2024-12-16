@@ -1,10 +1,10 @@
 import java.util.List;
 
 /**
- * Decrivez votre classe TransporterRoom ici.
+ * TransporterRoom est une salle speciale qui transporte le joueur a une salle aleatoire
  *
  * @author LIN Xingtong
- * @version (un numero de version ou une date)
+ * @version 12/2024
  */
 public class TransporterRoom extends Room {
     /** Liste des salles */
@@ -24,6 +24,9 @@ public class TransporterRoom extends Room {
         this.aRooms = pRooms;
     }
 
+    /**
+     * @param pIndex index de la salle qu'on veut aller
+     */
     public void setIndexRoom(final Integer pIndex) {
         this.aIndexTestRoom = pIndex;
     }
@@ -34,7 +37,7 @@ public class TransporterRoom extends Room {
      */
     @Override
     public Room getExit(final String pDirection) {
-        return RoomRandomizer.findRandomRoom(aRooms, this.aIndexTestRoom);
+        return RoomRandomizer.findRandomRoom(this.aRooms, this.aIndexTestRoom);
     }
 
     /**

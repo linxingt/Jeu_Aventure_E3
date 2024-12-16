@@ -22,8 +22,8 @@ import java.util.Arrays;
  * This class implements a simple graphical user interface with a
  * text entry area, a text output area and an optional image.
  * 
- * @author Michael Kolling
- * @version 1.0 (Jan 2003) DB edited (2023)
+ * @author Michael Kolling and LIN Xingtong
+ * @version 1.0 (Jan 2003) DB edited (2023) LIN Xingtong edited (2024)
  */
 public class UserInterface implements ActionListener {
     /** un moteur de jeu qui gere la fonctionnalite du jeu */
@@ -138,10 +138,17 @@ public class UserInterface implements ActionListener {
             vEastPanel.add(this.aBtsGo[i]);
             this.aBtsGo[i].addActionListener(this);
         }
+        Dimension vd = this.aBtsGo[1].getMaximumSize();
+        //car south est le plus long
+        for (int i = 0; i < vDirections.length; i++) {
+            if(i!=1)
+                this.aBtsGo[i].setMaximumSize(new Dimension(vd));
+        }
 
         this.aBtBack = new JButton("Back");
         vEastPanel.add(this.aBtBack);
         this.aBtBack.addActionListener(this);
+        this.aBtBack.setMaximumSize(new Dimension(vd));
 
         JPanel vPanel = new JPanel();
         vPanel.setLayout(new BorderLayout()); // ==> only five places

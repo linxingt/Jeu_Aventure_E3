@@ -1,10 +1,10 @@
 import java.util.Stack;
 
 /**
- * Decrivez votre classe Player ici.
+ * Cette classe permet de stocker les informations concernant le joueur du jeu.
  *
- * @author (votre nom)
- * @version (un numero de version ou une date)
+ * @author LIN Xingtong
+ * @version 12/2024
  */
 public class Player {
     /** la salle actuelle du joueur */

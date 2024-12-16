@@ -3,9 +3,10 @@ import java.util.HashMap;
 // import java.util.Iterator;
 
 /**
- * Classe Room - un lieu du jeu d'aventure Zuul.
+ * Cette classe permet de creer et de gerer les salles du jeu.
  *
  * @author LIN Xingtong
+ * @version 12/2024
  */
 public class Room {
     /** description de la salle */

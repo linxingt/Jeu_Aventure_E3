@@ -1,10 +1,10 @@
 import java.util.HashMap;
 
 /**
- * Decrivez votre classe ItemList ici.
+ * Cette classe permet de gerer une collection d'items dans le jeu.
  *
  * @author LIN Xingtong
- * @version (un numero de version ou une date)
+ * @version 12/2024
  */
 public class ItemList {
     /** la collection des items */

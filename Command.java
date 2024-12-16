@@ -1,7 +1,8 @@
 /**
- * Classe Command - une commande du jeu d'aventure Zuul.
+ * Cette classe est utilisee pour stocker les informations d'une commande entree
  *
  * @author LIN Xingtong
+ * @version 12/2024
  */
 public class Command {
     /** le premier mot de la commande */

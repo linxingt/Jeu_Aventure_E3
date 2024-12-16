@@ -2,16 +2,18 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Decrivez votre classe RoomRandomizer ici.
+ * Cette classe est concu pour generer une salle aleatoire.
  *
  * @author LIN Xingtong
- * @version (un numero de version ou une date)
+ * @version 12/2024
  */
 public class RoomRandomizer {
-    public static int NB_ROOMS = 4;
+    /** nombre de salles disponibles pour la choix aleatoire */
+    public static int CNB_ROOMS = 4;
 
     /**
      * @param pRooms liste des salles
+     * @param pIndex index de la salle qu'on veut aller si ya, sinon null
      * @return une salle aleatoire entre 1er et 4eme element de la liste
      */
     public static Room findRandomRoom(List<Room> pRooms, Integer pIndex) {
@@ -20,7 +22,7 @@ public class RoomRandomizer {
         }
         Random vRandom = new Random();
         // nextInt(n) génère un entier entre 0 (inclus) et n (exclus).
-        int vIndex = vRandom.nextInt(NB_ROOMS);
+        int vIndex = vRandom.nextInt(CNB_ROOMS);
         return pRooms.get(vIndex);
     }
 }

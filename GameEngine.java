@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * Decrivez votre classe GameEngine ici.
+ * C'est la classe principale du jeu. Elle cree les salles, le user interface, etc. Elle contient une boucle qui lit et execute les commandes entrees par l'utilisateur jusqu'a ce que le jeu soit termine.
  *
  * @author LIN Xingtong
- * @version (un numero de version ou une date)
+ * @version 12/2024
  */
 public class GameEngine {
     /** le nombre maximum de commandes */
@@ -148,7 +148,7 @@ public class GameEngine {
         vExperimentation.addItem("a dog in a cage biting the cage", 50, "dog", true, true);
         vExperimentation.addItem(new Beamer("beamer"));
 
-        aPlayer.setCurrentRoom(vOutside);
+        this.aPlayer.setCurrentRoom(vOutside);
     }
 
     /**
@@ -470,6 +470,10 @@ public class GameEngine {
             this.printLocationInfo();
     }
 
+    /**
+     * Changer la salle aleatoire ou predefinie dans la salle de transport (que pour mode test).
+     * @param pCmd commande a traiter contient index de la salle
+     */
     public void alea(final Command pCmd) {
         if (!this.aInTestMode) {
             this.aGui.println("You can't use the alea command because you are not in test mode.");
@@ -482,8 +486,8 @@ public class GameEngine {
         TransporterRoom vRoom = (TransporterRoom) this.aRooms.get(aRooms.size() - 1);
         if (pCmd.hasSecondWord()) {
             Integer vIndex = Integer.parseInt(pCmd.getSecondWord());
-            if (!(vIndex >= 0 && vIndex < RoomRandomizer.NB_ROOMS))
-                this.aGui.println("The index of the room must be between 0 and " + (RoomRandomizer.NB_ROOMS - 1) + ".");
+            if (!(vIndex >= 0 && vIndex < RoomRandomizer.CNB_ROOMS))
+                this.aGui.println("The index of the room must be between 0 and " + (RoomRandomizer.CNB_ROOMS - 1) + ".");
             vRoom.setIndexRoom(vIndex);
         } else {
             vRoom.setIndexRoom(null);
