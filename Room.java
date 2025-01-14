@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 // import java.util.Set;
 // import java.util.Iterator;
@@ -17,6 +18,8 @@ public class Room {
     private ItemList aItems;
     /** le nom de l'image de la salle */
     private String aImgName;
+    /** le personnage non-joueur de la salle */
+    private ArrayList<CharacterNPC> aNpcs;
 
     /**
      * Cree une nouveau salle avec la description et aExits par defaut.
@@ -29,6 +32,7 @@ public class Room {
         this.aExits = new HashMap<String, Room>();
         this.aItems = new ItemList();
         this.aImgName = pImgName;
+        this.aNpcs = new ArrayList<CharacterNPC>();
     }
 
     /**
@@ -74,7 +78,7 @@ public class Room {
      */
     public String getLongDescription(final Player pPlayer) {
         return "You are " + this.aDescription + "\n" + this.getExitString() + "\n"
-                + this.aItems.getItemsNames("room", pPlayer);
+                + this.aItems.getItemsNames("room", pPlayer) + "\n" + this.getNpcsNames();
     }
 
     /**
@@ -147,4 +151,27 @@ public class Room {
         }
     }
 
+    public void addNpc(final CharacterNPC pNpc) {
+        this.aNpcs.add(pNpc);
+    }
+
+    public CharacterNPC getOneNpc(final String pNpcName) {
+        for (CharacterNPC vNpc : this.aNpcs) {
+            if (vNpc.getName().equals(pNpcName))
+                return vNpc;
+        }
+        return null;
+    }
+
+    public String getNpcsNames() {
+        String vRes = "";
+        if (this.aNpcs.size() == 0)
+            return "There is no NPC in this room.";
+        vRes += "You can see";
+        for (CharacterNPC vNpc : this.aNpcs) {
+            vRes += " " + vNpc.getName();
+        }
+        vRes += " in this room.";
+        return vRes;
+    }
 } // Room

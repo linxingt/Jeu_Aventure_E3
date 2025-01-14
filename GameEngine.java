@@ -1,10 +1,13 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
- * C'est la classe principale du jeu. Elle cree les salles, le user interface, etc. Elle contient une boucle qui lit et execute les commandes entrees par l'utilisateur jusqu'a ce que le jeu soit termine.
+ * C'est la classe principale du jeu. Elle cree les salles, le user interface,
+ * etc. Elle contient une boucle qui lit et execute les commandes entrees par
+ * l'utilisateur jusqu'a ce que le jeu soit termine.
  *
  * @author LIN Xingtong
  * @version 12/2024
@@ -22,14 +25,16 @@ public class GameEngine {
     private ArrayList<Room> aRooms;
     /** true si le jeu est en mode test, false sinon */
     private boolean aInTestMode;
+    /** le personnage non-joueur qui en train de parler avec le joueur */
+    private CharacterNPC aNpcTalking;
 
     /**
      * Constructeur d'objets de classe GameEngine
      */
     public GameEngine() {
-        // String vPrenom = javax.swing.JOptionPane.showInputDialog( "What's your name?"
-        // );
-        // this.aPlayer = new Player( vPrenom );
+        // String vPrenom = javax.swing.JOptionPane.showInputDialog("What's your
+        // name?");
+        // this.aPlayer = new Player(vPrenom);
         this.aRooms = new ArrayList<Room>();
         this.aPlayer = new Player();
         this.createRooms();
@@ -129,6 +134,28 @@ public class GameEngine {
         vArchive.setExits("north", vExperimentation);
         vArchive.setExits("south", vGarden);
         vArchive.addItem("a cabinet with a lock", 900, "cabinet", false, true);
+        Item vGoodnight = new Item("a sleeping gas in a glass bottle", 10, "goodnight", true, true);
+        String[] vDialogues = {
+                "Who are you? You're not supposed to be here. Are you one of the new interns? Or... are you here for something else?",
+                "You seem determined. But this place is dangerous. Do you know what you're getting into?",
+                "You remind me of my sister. She was always so brave...",
+                "You've been selfish and cruel. I won't help you. Just know that Louis is dangerous.",
+                "You've been a bit kind, but not enough. Just be careful, Louis is dangerous.",
+                "You've been mostly kind. Here's a precise warning: Louis is in the Experimentation Room. Avoid him at all costs.",
+                "You've been so kind and determined. Take this 'goodnight' item. It will help you if you encounter Louis. Also, be careful, Louis is in the Experimentation Room, and he's very dangerous."
+        };
+        String[] vDialoguesChoices = {
+                "I'm here to save my sister. She was taken by the scientists years ago, and I've been trying to find her ever since. This is the closest I've ever been to saving her. Please, I need your help.",
+                "I don't care about your experiments or your little science projects. I just need to get what I came for, and I don't have time for your questions.",
+                "Dangerous? You think I care? I just need to get what I came for and get out of here.",
+                "I know it's dangerous, but I have no choice. I have to save her, even if it means risking my life.",
+                "Stop talking. I don't have time for your stories.",
+                "Your sister? What happened to her?"
+        };
+        vArchive.addNpc(new CharacterNPC("Sophie",
+                "Sophie, the daughter of a scientist. She spends her time doing homework in the archives room.",
+                vGoodnight, vDialogues, new ArrayList<>(Arrays.asList(0, 3, 5)), vDialoguesChoices));
+
         // attends key open cabinet
         // "You use the key to open the cabinet and find a lot of \nexperimenter
         // information, sorted by name. You easily find \nAlice's information and find
@@ -171,6 +198,7 @@ public class GameEngine {
             this.aPlayer.addPreviousRoom(this.aPlayer.getCurrentRoom());// Pushes a new element on top of this Stack.
             this.aPlayer.setCurrentRoom(vNextRoom);
             this.aPlayer.setNbrCmdAddOne();
+            this.aNpcTalking = null;
         }
         if (!this.limiteCmd())
             this.printLocationInfo();
@@ -198,6 +226,7 @@ public class GameEngine {
         this.aPlayer.removePreviousRoom();// Removes the head element from this Stack.
         this.printLocationInfo();
         this.aPlayer.setNbrCmdAddOne();
+        this.aNpcTalking = null;
         this.limiteCmd();
     }
 
@@ -287,6 +316,8 @@ public class GameEngine {
             this.fire(vCmd);
         } else if (vCmd.getCommandWord().equals("alea")) {
             this.alea(vCmd);
+        } else if (vCmd.getCommandWord().equals("talk")) {
+            this.talk(vCmd);
         } else {
             this.aGui.println("I don't know what you mean...");
         }
@@ -300,13 +331,24 @@ public class GameEngine {
     private void look(final Command pCmd) {
         if (pCmd.hasSecondWord()) {
             String vItemName = pCmd.getSecondWord();
-            Item vItem = this.aPlayer.getCurrentRoom().getOneItem(vItemName);
-            if (vItem == null) {
-                this.aGui.println("The item you are looking for is not in this room.");
+            boolean vFLetterUpper = Character.isUpperCase(vItemName.charAt(0));
+            if (!vFLetterUpper) {
+                Item vItem = this.aPlayer.getCurrentRoom().getOneItem(vItemName);
+                if (vItem == null) {
+                    this.aGui.println("The item you are looking for is not in this room.");
+                    return;
+                }
+                this.aGui.println("There is " + vItem.getItemDescription() + ".");
+                return;
+            } else {
+                CharacterNPC vNpc = this.aPlayer.getCurrentRoom().getOneNpc(vItemName);
+                if (vNpc == null) {
+                    this.aGui.println("The NPC you are looking for is not in this room.");
+                    return;
+                }
+                this.aGui.println(vNpc.getDescription());
                 return;
             }
-            this.aGui.println("There is " + vItem.getItemDescription() + ".");
-            return;
         }
         this.aGui.println(this.aPlayer.getCurrentRoom().getLongDescription(this.aPlayer) + "\n");
     }
@@ -466,12 +508,16 @@ public class GameEngine {
             this.aGui.println("Fire can't be followed by a second word because only the beamer can be fired.");
             return;
         }
-        if (this.aPlayer.fireBeamer(this.aGui))
+        if (this.aPlayer.fireBeamer(this.aGui)) {
+            this.aNpcTalking = null;
             this.printLocationInfo();
+        }
     }
 
     /**
-     * Changer la salle aleatoire ou predefinie dans la salle de transport (que pour mode test).
+     * Changer la salle aleatoire ou predefinie dans la salle de transport (que pour
+     * mode test).
+     * 
      * @param pCmd commande a traiter contient index de la salle
      */
     public void alea(final Command pCmd) {
@@ -487,10 +533,40 @@ public class GameEngine {
         if (pCmd.hasSecondWord()) {
             Integer vIndex = Integer.parseInt(pCmd.getSecondWord());
             if (!(vIndex >= 0 && vIndex < RoomRandomizer.CNB_ROOMS))
-                this.aGui.println("The index of the room must be between 0 and " + (RoomRandomizer.CNB_ROOMS - 1) + ".");
+                this.aGui
+                        .println("The index of the room must be between 0 and " + (RoomRandomizer.CNB_ROOMS - 1) + ".");
             vRoom.setIndexRoom(vIndex);
         } else {
             vRoom.setIndexRoom(null);
         }
+    }
+
+    public void talk(final Command pCmd) {
+        if (!pCmd.hasSecondWord()) {
+            this.aGui.println("Talk to whom? or what?");
+            return;
+        }
+        int vTalkNum = 100;
+        String vNpcName = "";
+        String vNpcNameOrTalkNum = pCmd.getSecondWord();
+        try {
+            vTalkNum = Integer.parseInt(vNpcNameOrTalkNum);
+            if (pCmd.hasSecondWord() && this.aNpcTalking == null) {
+                this.aGui.println("There is no such character who you can talk to.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            vNpcName = vNpcNameOrTalkNum;
+            CharacterNPC vNpc = this.aPlayer.getCurrentRoom().getOneNpc(vNpcName);
+            if (vNpc == null) {
+                this.aGui.println("There is no such character in this room.");
+                return;
+            }
+            this.aNpcTalking = vNpc;
+        }
+        if (vTalkNum != 100)
+            aNpcTalking.talk(this.aGui, vTalkNum, this.aPlayer.getCurrentRoom());
+        else
+            aNpcTalking.talk(this.aGui, this.aPlayer.getCurrentRoom());
     }
 }
