@@ -20,6 +20,10 @@ public class Room {
     private String aImgName;
     /** le personnage non-joueur de la salle */
     private ArrayList<CharacterNPC> aNpcs;
+    /** si la salle est verrouillee */
+    private boolean aIsLocked;
+    /** le nom de l'objet qui peut ouvrir la salle verrouillee */
+    private String aNameKey;
 
     /**
      * Cree une nouveau salle avec la description et aExits par defaut.
@@ -33,6 +37,7 @@ public class Room {
         this.aItems = new ItemList();
         this.aImgName = pImgName;
         this.aNpcs = new ArrayList<CharacterNPC>();
+        this.aIsLocked = false;
     }
 
     /**
@@ -40,6 +45,30 @@ public class Room {
      */
     public String getDescription() {
         return this.aDescription;
+    }
+
+    /**
+     * setter pour boolean aIsLocked
+     * 
+     * @param pIsLocked si la salle est verrouillee
+     */
+    public void setIsLocked(final boolean pIsLocked, final String pNameKey) {
+        this.aIsLocked = pIsLocked;
+        this.aNameKey = pNameKey;
+    }
+
+    /**
+     * @return le nom de l'objet qui peut ouvrir la salle verrouillee
+     */
+    public String getNameKey() {
+        return this.aNameKey;
+    }
+
+    /**
+     * @return si la salle est verrouillee
+     */
+    public boolean getIsLocked() {
+        return this.aIsLocked;
     }
 
     /**
@@ -151,10 +180,20 @@ public class Room {
         }
     }
 
+    /**
+     * la methode qui ajoute un personnage non-joueur dans la salle
+     * 
+     * @param pNpc le personnage non-joueur a ajouter
+     */
     public void addNpc(final CharacterNPC pNpc) {
         this.aNpcs.add(pNpc);
     }
 
+    /**
+     * @param pNpcName le nom du personnage non-joueur a chercher
+     * @return le personnage non-joueur trouve si le personnage non-joueur existe,
+     *         sinon null
+     */
     public CharacterNPC getOneNpc(final String pNpcName) {
         for (CharacterNPC vNpc : this.aNpcs) {
             if (vNpc.getName().equals(pNpcName))
@@ -163,6 +202,9 @@ public class Room {
         return null;
     }
 
+    /**
+     * @return la liste des noms des personnages non-joueurs dans la salle
+     */
     public String getNpcsNames() {
         String vRes = "";
         if (this.aNpcs.size() == 0)

@@ -8,19 +8,39 @@ import java.util.ArrayList;
  */
 public class CharacterNPC {
     // variables d'instance - remplacez l'exemple qui suit par le vetre
+    /** le nom du personnage non-joueur */
     private String aName;
+    /** la description du personnage non-joueur */
     private String aDescription;
+    /** l'item que le personnage non-joueur peut donner */
     private Item aItem;
+    /** les dialogues du personnage non-joueur */
     private String[] aDialogues;
+    /** les dialogues à choisir pour joueur */
     private String[] aDialoguesChoices;
+    /**
+     * le compteur de dialogues qui permet de naviger dans le tableau de dialogues
+     */
     private int aCounter;
+    /** le boolean qui indique si le personnage non-joueur peut donner l'item */
     private boolean aTrusted;
+    /** le boolean qui indique si le personnage non-joueur a donné l'item */
     private boolean aGiven;
+    /** le nombre de bonnes réponses que le joueur a choisies */
     private int aGoodChoiceCount;
+    /** les position des bonnes réponses dans le tableau de dialogues */
     private ArrayList<Integer> aGoodChoices;
 
     /**
      * Constructeur d'objets de classe CharacterNPC
+     * 
+     * @param pName             le nom du personnage non-joueur
+     * @param pDescription      la description du personnage non-joueur
+     * @param pItem             l'item que le personnage non-joueur peut donner
+     * @param pDialogues        les dialogues du personnage non-joueur
+     * @param pGoodChoices      les position des bonnes réponses dans le tableau de
+     *                          dialogues
+     * @param pDialoguesChoices les dialogues à choisir pour joueur
      */
     public CharacterNPC(final String pName, final String pDescription, final Item pItem, final String[] pDialogues,
             final ArrayList<Integer> pGoodChoices, final String[] pDialoguesChoices) {
@@ -37,6 +57,13 @@ public class CharacterNPC {
         this.aTrusted = false;
     }
 
+    /**
+     * la methode qui organise les diaglogues, notament pour ce qui commence par le
+     * personnage non-joueur
+     * 
+     * @param pGui  l'interface utilisateur qui affiche
+     * @param pRoom la salle actuelle
+     */
     public void talk(final UserInterface pGui, final Room pRoom) {
         int vNbrTotalTalks = (this.aDialogues.length + 1) / 2;
         // nbr de conversation active +1 reponse pareil pour ts reste
@@ -62,12 +89,30 @@ public class CharacterNPC {
         }
     }
 
+    /**
+     * la methode qui organise les diaglogues, et les choix du joueur
+     * 
+     * @param pGui    l'interface utilisateur qui affiche
+     * @param pChoice le choix du joueur
+     * @param pRoom   la salle actuelle
+     */
     public void talk(final UserInterface pGui, final int pChoice, final Room pRoom) {
         int vNbrTotalTalks = (this.aDialogues.length + 1) / 2;
+        if(pChoice<0||pChoice>this.aDialoguesChoices.length-1){
+            pGui.println("Invalid choice. Please read the number before the response.");
+            return;
+        }
         setGoodChoiceCounter(pChoice, vNbrTotalTalks - 1);
         talk(pGui, pRoom);
     }
 
+    /**
+     * la methode qui compte le nombre de bonnes reponses et donner valeur à boolean
+     * aTrusted
+     * 
+     * @param pChoice  le numéro de la réponse choisie
+     * @param pGoodMax le nombre de bonnes réponses maximum
+     */
     public void setGoodChoiceCounter(final int pChoice, final int pGoodMax) {
         if (this.aGoodChoices.contains(pChoice))
             this.aGoodChoiceCount++;
@@ -75,6 +120,12 @@ public class CharacterNPC {
             this.aTrusted = true;
     }
 
+    /**
+     * la methode qui donne l'item au joueur en jetant l'item dans la salle
+     * 
+     * @param pRoom la salle actuelle
+     * @return le message qui indique que l'item est donné
+     */
     public String giveItem(Room pRoom) {
         if (this.aTrusted) {
             pRoom.addItem(this.aItem);
@@ -84,10 +135,16 @@ public class CharacterNPC {
         return "";
     }
 
+    /**
+     * @return la description du personnage non-joueur
+     */
     public String getDescription() {
         return this.aDescription;
     }
 
+    /**
+     * @return le nom du personnage non-joueur
+     */
     public String getName() {
         return this.aName;
     }

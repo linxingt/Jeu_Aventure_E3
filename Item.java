@@ -16,6 +16,10 @@ public class Item {
     private boolean aCanBePickedUp;
     /** si l'objet est visible */
     private boolean aVisible;
+    /** si l'objet est verrouille */
+    private boolean aIsLocked;
+    /** le nom de l'objet qui peut ouvrir l'objet verrouille */
+    private String aNameKey;
 
     /**
      * Constructeur d'objets de classe Item
@@ -34,6 +38,7 @@ public class Item {
         this.aName = pItemName;
         this.aCanBePickedUp = pItemCanBePickedUp;
         this.aVisible = pItemVisible;
+        this.aIsLocked = false;
     }
 
     /**
@@ -41,6 +46,30 @@ public class Item {
      */
     public boolean getVisible() {
         return this.aVisible;
+    }
+
+    /**
+     * setter pour boolean aIsLocked
+     * 
+     * @param pIsLocked si l'objet est verrouille
+     */
+    public void setIsLocked(final boolean pIsLocked, final String pNameKey) {
+        this.aIsLocked = pIsLocked;
+        this.aNameKey = pNameKey;
+    }
+
+    /**
+     * @return le nom de l'objet qui peut ouvrir l'objet verrouille
+     */
+    public String getNameKey() {
+        return this.aNameKey;
+    }
+
+    /**
+     * @return si l'objet est verrouille
+     */
+    public boolean getIsLocked() {
+        return this.aIsLocked;
     }
 
     /**

@@ -69,6 +69,7 @@ public class GameEngine {
         Room vPrison = new Room(
                 "in the prison room, where human subjects are held in confinement. The air feels heavy with tension.",
                 "prison.jpg");
+        vPrison.setIsLocked(true, "bracelet");
         Room vAnimal = new Room(
                 "in the animal room, a isolated space where animals, transformed by experiments, are kept in cages. \nThe room is eerily quiet.",
                 "animal.jpg");
@@ -78,6 +79,7 @@ public class GameEngine {
         Room vExperimentation = new Room(
                 "in the experimentation room, where the darkest of the laboratory's procedures are carried out. \nSurgical beds and strange equipment fill the space.",
                 "experimentation.png");
+        vExperimentation.setIsLocked(true, "card");
         Room vGarden = new Room(
                 "in a garden, with flowers blooming beautifully but with a rancid smell.", "garden.jpg");
 
@@ -102,7 +104,7 @@ public class GameEngine {
 
         vStorage.setExits("down", vClean);
         vStorage.setExits("north", vOutside);
-        vStorage.addItem("a key for the cabinet in the archives room", 60, "key", true, true);
+        vStorage.addItem("a key for the cabinet in the archives room", 40, "key", true, true);
         vStorage.addItem("an invisible cloth can help you hide", 50, "cloth", true, false);
         vStorage.addItem("a torn piece of paper with the name Alice", 2, "paper", false, true);
         vStorage.addItem("a plan of the entire laboratory but broken", 10, "plan", false, true);
@@ -110,7 +112,7 @@ public class GameEngine {
         vClean.setExits("west", vMeeting);
         vClean.setExits("south", vTransporter);
         vClean.setExits("up", vStorage);
-        vClean.addItem("an access card for the experiment room", 50, "card", true, true);
+        vClean.addItem("an access card for the experiment room", 40, "card", true, true);
         vClean.addItem("a magic cake that can increase your maximum ability to take things by 20% after eating it", 60,
                 "magicCake", true, false);
 
@@ -118,8 +120,11 @@ public class GameEngine {
         vMeeting.setExits("west", vArchive);
         vMeeting.setExits("south", vPrison);
         vMeeting.addItem(
-                "a whiteboard displays a discussion about which animal to place 2566's soul into, along with a prominent slogan",
+                "a whiteboard displays a discussion about which animal to place 2566's soul into, along with a prominent slogan and a cat logo",
                 500, "whiteboard", false, true);
+        vMeeting.addItem(
+                "a bracelet that can open the prison",
+                40, "bracelet", true, true);
 
         vPrison.setExits("north", vMeeting);
         vPrison.setExits("west", vGarden);
@@ -133,7 +138,11 @@ public class GameEngine {
         vArchive.setExits("east", vMeeting);
         vArchive.setExits("north", vExperimentation);
         vArchive.setExits("south", vGarden);
-        vArchive.addItem("a cabinet with a lock", 900, "cabinet", false, true);
+        Item vCabinet = new Item(
+                "a notebook inside the cabinet, which contains your sister's name, her photo and what happened to her: she was sent to the laboratory a day ago to conduct an experiment on souls entering animals",
+                900, "cabinet", false, true);
+        vCabinet.setIsLocked(true, "key");
+        vArchive.addItem(vCabinet);
         Item vGoodnight = new Item("a sleeping gas in a glass bottle", 10, "goodnight", true, true);
         String[] vDialogues = {
                 "Who are you? You're not supposed to be here. Are you one of the new interns? Or... are you here for something else?",
@@ -155,16 +164,6 @@ public class GameEngine {
         vArchive.addNpc(new CharacterNPC("Sophie",
                 "Sophie, the daughter of a scientist. She spends her time doing homework in the archives room.",
                 vGoodnight, vDialogues, new ArrayList<>(Arrays.asList(0, 3, 5)), vDialoguesChoices));
-
-        // attends key open cabinet
-        // "You use the key to open the cabinet and find a lot of \nexperimenter
-        // information, sorted by name. You easily find \nAlice's information and find
-        // that her name and photo are \nthe same as your missing sister. You also find
-        // that the latest information \nindicates that she will be sent to the
-        // laboratory within a week. \nWhen flipping through the information, you find
-        // that the \nearliest information about this laboratory appears in 2050. \nYou
-        // suspect that this is the year the laboratory was founded. \nA piece of paper
-        // with August 9, 2050 written on it falls \nfrom the book, proving your guess."
 
         vExperimentation.setExits("east", vAnimal);
         vExperimentation.setExits("south", vArchive);
@@ -192,15 +191,22 @@ public class GameEngine {
         Room vNextRoom = this.aPlayer.getCurrentRoom().getExit(vDirection);
         if (vNextRoom == null) {
             this.aGui.println("There is no door !");
+            return;
         } else {
+            boolean vLocked = vNextRoom.getIsLocked();
+            if (!(!vLocked || (this.aPlayer.hasItem(vNextRoom.getNameKey()) && vLocked))) {
+                this.aGui.println(vNextRoom.getRoomName() + " need card to open");
+                return;
+            }
             if (!vNextRoom.isExit(this.aPlayer.getCurrentRoom()))
                 this.aPlayer.removeAllPreviousRooms();
-            this.aPlayer.addPreviousRoom(this.aPlayer.getCurrentRoom());// Pushes a new element on top of this Stack.
+            this.aPlayer.addPreviousRoom(this.aPlayer.getCurrentRoom());// Pushes a new element on top of this
+                                                                        // Stack.
             this.aPlayer.setCurrentRoom(vNextRoom);
             this.aPlayer.setNbrCmdAddOne();
             this.aNpcTalking = null;
         }
-        if (!this.limiteCmd())
+        if (!this.limiteCmd()&&!isWin())
             this.printLocationInfo();
     }
 
@@ -338,8 +344,15 @@ public class GameEngine {
                     this.aGui.println("The item you are looking for is not in this room.");
                     return;
                 }
-                this.aGui.println("There is " + vItem.getItemDescription() + ".");
-                return;
+                boolean vLocked = vItem.getIsLocked();
+                if (!vLocked || (this.aPlayer.hasItem(vItem.getNameKey()) && vLocked)) {
+                    this.aGui.println("There is " + vItem.getItemDescription() + ".");
+                    return;
+                } else {
+                    this.aGui.println(vItem.getItemName().substring(0, 1).toUpperCase()
+                            + vItem.getItemName().substring(1) + " is locked.");
+                    return;
+                }
             } else {
                 CharacterNPC vNpc = this.aPlayer.getCurrentRoom().getOneNpc(vItemName);
                 if (vNpc == null) {
@@ -484,6 +497,17 @@ public class GameEngine {
         }
         return false;
     }
+    
+    private boolean isWin(){
+        boolean vIsOutside = this.aPlayer.getCurrentRoom().getImgName().equals("entrance.jpg");
+        boolean vHasCat = this.aPlayer.hasItem("cat");
+        if(vIsOutside&&vHasCat&&!limiteCmd()){
+            this.aGui.println("Congratulations! You have found your sister and left the laboratory. You win!");
+            this.aGui.enable(false);
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Charger le beamer.
@@ -541,6 +565,11 @@ public class GameEngine {
         }
     }
 
+    /**
+     * traiter le 2eme mot dans la commande puis appel la methode talk correpondante
+     * 
+     * @param pCmd commande a traiter
+     */
     public void talk(final Command pCmd) {
         if (!pCmd.hasSecondWord()) {
             this.aGui.println("Talk to whom? or what?");
