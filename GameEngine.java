@@ -69,7 +69,8 @@ public class GameEngine {
         Room vPrison = new Room(
                 "in the prison room, where human subjects are held in confinement. The air feels heavy with tension.",
                 "prison.jpg");
-        vPrison.setIsLocked(true, "bracelet");
+        vPrison.setIsLocked(true, "bracelet", vMeeting);
+        vMeeting.setIsLocked(true, "bracelet", vPrison);
         Room vAnimal = new Room(
                 "in the animal room, a isolated space where animals, transformed by experiments, are kept in cages. \nThe room is eerily quiet.",
                 "animal.jpg");
@@ -79,7 +80,8 @@ public class GameEngine {
         Room vExperimentation = new Room(
                 "in the experimentation room, where the darkest of the laboratory's procedures are carried out. \nSurgical beds and strange equipment fill the space.",
                 "experimentation.png");
-        vExperimentation.setIsLocked(true, "card");
+        vExperimentation.setIsLocked(true, "card", vArchive);
+        vArchive.setIsLocked(true, "card", vExperimentation);
         Room vGarden = new Room(
                 "in a garden, with flowers blooming beautifully but with a rancid smell.", "garden.jpg");
 
@@ -139,7 +141,7 @@ public class GameEngine {
         vArchive.setExits("north", vExperimentation);
         vArchive.setExits("south", vGarden);
         Item vCabinet = new Item(
-                "a notebook inside the cabinet, which contains your sister's name, her photo and what happened to her: she was sent to the laboratory a day ago to conduct an experiment on souls entering animals",
+                "a notebook inside the cabinet, which contains your sister's name, her photo and what happened to her: \nshe was sent to the laboratory a day ago to conduct an experiment on souls entering animals",
                 900, "cabinet", false, true);
         vCabinet.setIsLocked(true, "key");
         vArchive.addItem(vCabinet);
@@ -151,11 +153,11 @@ public class GameEngine {
                 "You've been selfish and cruel. I won't help you. Just know that Louis is dangerous.",
                 "You've been a bit kind, but not enough. Just be careful, Louis is dangerous.",
                 "You've been mostly kind. Here's a precise warning: Louis is in the Experimentation Room. Avoid him at all costs.",
-                "You've been so kind and determined. Take this 'goodnight' item. It will help you if you encounter Louis. Also, be careful, Louis is in the Experimentation Room, and he's very dangerous."
+                "You've been so kind and determined. Take this 'goodnight' item. It will help you if you encounter Louis. \nAlso, be careful, Louis is in the Experimentation Room, and he's very dangerous."
         };
         String[] vDialoguesChoices = {
-                "I'm here to save my sister. She was taken by the scientists years ago, and I've been trying to find her ever since. This is the closest I've ever been to saving her. Please, I need your help.",
-                "I don't care about your experiments or your little science projects. I just need to get what I came for, and I don't have time for your questions.",
+                "I'm here to save my sister. She was taken by the scientists years ago, and I've been trying to find her ever since. \nThis is the closest I've ever been to saving her. Please, I need your help.",
+                "I don't care about your experiments or your little science projects. I just need to get what I came for, \nand I don't have time for your questions.",
                 "Dangerous? You think I care? I just need to get what I came for and get out of here.",
                 "I know it's dangerous, but I have no choice. I have to save her, even if it means risking my life.",
                 "Stop talking. I don't have time for your stories.",
@@ -168,10 +170,10 @@ public class GameEngine {
         vExperimentation.setExits("east", vAnimal);
         vExperimentation.setExits("south", vArchive);
         vExperimentation.addItem("a bed with a '2566' mark on it", 300, "bed", false, true);
-        vExperimentation.addItem("a little girl sleeping in bed", 50, "girl", true, true);
-        vExperimentation.addItem("a cat dozing in a cage", 50, "cat", true, true);
-        vExperimentation.addItem("a rabbit eating grass in a cage", 50, "rabbit", true, true);
-        vExperimentation.addItem("a dog in a cage biting the cage", 50, "dog", true, true);
+        vExperimentation.addItem("a little girl is sleeping in bed, and she looks very familiar. As you think about it, \nyou realize she is your sister, but she appears thinner than in the photos you saw in the files", 50, "girl", true, true);
+        vExperimentation.addItem("a cat is dozing in a cage. It is truly beautiful, with long, white fur, \nbut it seems to be in pain, occasionally twitching slightly with its eyes closed", 50, "cat", true, true);
+        vExperimentation.addItem("a rabbit is eating grass in a very tiny cage. Unlike the rabbits we usually see, \nit is very small, looks incredibly cute, and is surprisingly black", 50, "rabbit", true, true);
+        vExperimentation.addItem("a dog is sleeping in a cage. It looks very large.", 50, "dog", true, true);
         vExperimentation.addItem(new Beamer("beamer"));
 
         this.aPlayer.setCurrentRoom(vOutside);
@@ -193,9 +195,9 @@ public class GameEngine {
             this.aGui.println("There is no door !");
             return;
         } else {
-            boolean vLocked = vNextRoom.getIsLocked();
+            boolean vLocked = vNextRoom.getIsLocked() && aPlayer.getCurrentRoom() == vNextRoom.getExistLocked();
             if (!(!vLocked || (this.aPlayer.hasItem(vNextRoom.getNameKey()) && vLocked))) {
-                this.aGui.println(vNextRoom.getRoomName() + " need card to open");
+                this.aGui.println(vNextRoom.getRoomName() + " need something to unlock.");
                 return;
             }
             if (!vNextRoom.isExit(this.aPlayer.getCurrentRoom()))
@@ -206,7 +208,7 @@ public class GameEngine {
             this.aPlayer.setNbrCmdAddOne();
             this.aNpcTalking = null;
         }
-        if (!this.limiteCmd()&&!isWin())
+        if (!this.limiteCmd())
             this.printLocationInfo();
     }
 
@@ -228,6 +230,11 @@ public class GameEngine {
             return;
         }
         Room vNextRoom = this.aPlayer.getPreviousRoom();// Returns the head element without modifying the Stack.
+        boolean vLocked = vNextRoom.getIsLocked() && aPlayer.getCurrentRoom() == vNextRoom.getExistLocked();
+        if (!(!vLocked || (this.aPlayer.hasItem(vNextRoom.getNameKey()) && vLocked))) {
+            this.aGui.println(vNextRoom.getRoomName() + " need something to unlock.");
+            return;
+        }
         this.aPlayer.setCurrentRoom(vNextRoom);
         this.aPlayer.removePreviousRoom();// Removes the head element from this Stack.
         this.printLocationInfo();
@@ -240,7 +247,7 @@ public class GameEngine {
      * Afficher les informations localisation de salle actuel.
      */
     private void printLocationInfo() {
-        this.aGui.println(this.aPlayer.getCurrentRoom().getLongDescription(this.aPlayer));
+        if(!isWin()) this.aGui.println(this.aPlayer.getCurrentRoom().getLongDescription(this.aPlayer));
         if (this.aPlayer.getCurrentRoom().getImgName() != null)
             this.aGui.showImage(this.aPlayer.getCurrentRoom().getImgName());
     }
@@ -340,8 +347,9 @@ public class GameEngine {
             boolean vFLetterUpper = Character.isUpperCase(vItemName.charAt(0));
             if (!vFLetterUpper) {
                 Item vItem = this.aPlayer.getCurrentRoom().getOneItem(vItemName);
+                vItem = vItem == null ? this.aPlayer.getOneItem(vItemName) : vItem;
                 if (vItem == null) {
-                    this.aGui.println("The item you are looking for is not in this room.");
+                    this.aGui.println("The item you are looking for is not in this room or in your inventory.");
                     return;
                 }
                 boolean vLocked = vItem.getIsLocked();
@@ -497,11 +505,11 @@ public class GameEngine {
         }
         return false;
     }
-    
-    private boolean isWin(){
+
+    private boolean isWin() {
         boolean vIsOutside = this.aPlayer.getCurrentRoom().getImgName().equals("entrance.jpg");
         boolean vHasCat = this.aPlayer.hasItem("cat");
-        if(vIsOutside&&vHasCat&&!limiteCmd()){
+        if (vIsOutside && vHasCat && !limiteCmd()) {
             this.aGui.println("Congratulations! You have found your sister and left the laboratory. You win!");
             this.aGui.enable(false);
             return true;

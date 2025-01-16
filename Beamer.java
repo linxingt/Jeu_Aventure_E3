@@ -1,6 +1,7 @@
 
 /**
- * Beamer est un objet special qui peut etre charge et utilise pour teleporter le joueur
+ * Beamer est un objet special qui peut etre charge et utilise pour teleporter
+ * le joueur
  *
  * @author LIN Xingtong
  * @version 12/2024
@@ -19,7 +20,7 @@ public class Beamer extends Item {
      * @param pName nom de beamer
      */
     public Beamer(final String pName) {
-        super("A beamer is a device that can be charged (only one time), and fired (only one time). \nWhen you charge the beamer, it memorizes the current room. When you fire the beamer, it transports you immediately back to the room it was charged in, then commande back will be disabled.",
+        super("a beamer is a device that can be charged (only one time), and fired (only one time). \nWhen you charge the beamer, it memorizes the current room. When you fire the beamer, \nit transports you immediately back to the room it was charged in, then commande back will be disabled",
                 70, pName, true, true);
         this.aIsCharged = false;
         this.aIsUsed = false;

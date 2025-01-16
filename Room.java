@@ -24,6 +24,8 @@ public class Room {
     private boolean aIsLocked;
     /** le nom de l'objet qui peut ouvrir la salle verrouillee */
     private String aNameKey;
+    /** la salle qui a est avant la salle verrouillee */
+    private Room aExistLocked;
 
     /**
      * Cree une nouveau salle avec la description et aExits par defaut.
@@ -48,13 +50,23 @@ public class Room {
     }
 
     /**
-     * setter pour boolean aIsLocked
+     * setter pour boolean aIsLocked, String aNameKey et Room aExistLocked
      * 
-     * @param pIsLocked si la salle est verrouillee
+     * @param pIsLocked    si la salle est verrouillee
+     * @param pNameKey     le nom de l'objet qui peut ouvrir la salle verrouillee
+     * @param pExistLocked la salle qui a est avant la salle verrouillee
      */
-    public void setIsLocked(final boolean pIsLocked, final String pNameKey) {
+    public void setIsLocked(final boolean pIsLocked, final String pNameKey, final Room pExistLocked) {
         this.aIsLocked = pIsLocked;
         this.aNameKey = pNameKey;
+        this.aExistLocked = pExistLocked;
+    }
+
+    /**
+     * @return la salle qui a est avant la salle verrouillee
+     */
+    public Room getExistLocked() {
+        return this.aExistLocked;
     }
 
     /**

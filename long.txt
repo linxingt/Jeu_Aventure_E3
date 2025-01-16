@@ -25,8 +25,8 @@ take card
 go west
 help
 look whiteboard
+take bracelet
 go west
-look cabinet
 go east
 eat
 go south
@@ -35,14 +35,29 @@ go west
 go south
 back
 go east
+drop bracelet
 go north
+take bracelet
+go north
+drop bracelet
 go south
 look
-go north
+take bracelet
+look bracelet
 go west
+talk Sophie
+talk 0
+talk 3
+talk 5
+look cabinet
+drop key
+look cabinet
+items
+look
+take goodnight
 go north
 look bed
-drop key
+drop bracelet
 look beamer
 take beamer
 look girl
@@ -51,25 +66,20 @@ look rabbit
 look dog
 items
 go east
+go west
 go south
 back
-go west
-back
+go east
+go south
 go east
 go up
 go north
 charge
-drop beamer
-look beamer
-take beamer
 go south
 go down
 help
 go west
 charge
-drop beamer
-look beamer
-take beamer
 go west
 go north
 go south
@@ -83,6 +93,11 @@ alea 2
 go south
 go 2meeting
 alea
-go east
-go south
-go vrmAlea
+go west
+go north
+take cat
+items
+drop card
+drop goodnight
+take cat
+fire
