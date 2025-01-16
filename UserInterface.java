@@ -139,9 +139,9 @@ public class UserInterface implements ActionListener {
             this.aBtsGo[i].addActionListener(this);
         }
         Dimension vd = this.aBtsGo[1].getMaximumSize();
-        //car south est le plus long
+        // car south est le plus long
         for (int i = 0; i < vDirections.length; i++) {
-            if(i!=1)
+            if (i != 1)
                 this.aBtsGo[i].setMaximumSize(new Dimension(vd));
         }
 

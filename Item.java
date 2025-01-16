@@ -52,6 +52,7 @@ public class Item {
      * setter pour boolean aIsLocked
      * 
      * @param pIsLocked si l'objet est verrouille
+     * @param pNameKey  le nom de l'objet qui peut ouvrir l'objet verrouille
      */
     public void setIsLocked(final boolean pIsLocked, final String pNameKey) {
         this.aIsLocked = pIsLocked;

@@ -1,7 +1,8 @@
 import java.util.List;
 
 /**
- * TransporterRoom est une salle speciale qui transporte le joueur a une salle aleatoire
+ * TransporterRoom est une salle speciale qui transporte le joueur a une salle
+ * aleatoire
  *
  * @author LIN Xingtong
  * @version 12/2024

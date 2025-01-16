@@ -98,7 +98,7 @@ public class CharacterNPC {
      */
     public void talk(final UserInterface pGui, final int pChoice, final Room pRoom) {
         int vNbrTotalTalks = (this.aDialogues.length + 1) / 2;
-        if(pChoice<0||pChoice>this.aDialoguesChoices.length-1){
+        if (pChoice < 0 || pChoice > this.aDialoguesChoices.length - 1) {
             pGui.println("Invalid choice. Please read the number before the response.");
             return;
         }

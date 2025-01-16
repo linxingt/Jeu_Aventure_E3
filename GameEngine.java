@@ -170,9 +170,15 @@ public class GameEngine {
         vExperimentation.setExits("east", vAnimal);
         vExperimentation.setExits("south", vArchive);
         vExperimentation.addItem("a bed with a '2566' mark on it", 300, "bed", false, true);
-        vExperimentation.addItem("a little girl is sleeping in bed, and she looks very familiar. As you think about it, \nyou realize she is your sister, but she appears thinner than in the photos you saw in the files", 50, "girl", true, true);
-        vExperimentation.addItem("a cat is dozing in a cage. It is truly beautiful, with long, white fur, \nbut it seems to be in pain, occasionally twitching slightly with its eyes closed", 50, "cat", true, true);
-        vExperimentation.addItem("a rabbit is eating grass in a very tiny cage. Unlike the rabbits we usually see, \nit is very small, looks incredibly cute, and is surprisingly black", 50, "rabbit", true, true);
+        vExperimentation.addItem(
+                "a little girl is sleeping in bed, and she looks very familiar. As you think about it, \nyou realize she is your sister, but she appears thinner than in the photos you saw in the files",
+                50, "girl", true, true);
+        vExperimentation.addItem(
+                "a cat is dozing in a cage. It is truly beautiful, with long, white fur, \nbut it seems to be in pain, occasionally twitching slightly with its eyes closed",
+                50, "cat", true, true);
+        vExperimentation.addItem(
+                "a rabbit is eating grass in a very tiny cage. Unlike the rabbits we usually see, \nit is very small, looks incredibly cute, and is surprisingly black",
+                50, "rabbit", true, true);
         vExperimentation.addItem("a dog is sleeping in a cage. It looks very large.", 50, "dog", true, true);
         vExperimentation.addItem(new Beamer("beamer"));
 
@@ -247,7 +253,8 @@ public class GameEngine {
      * Afficher les informations localisation de salle actuel.
      */
     private void printLocationInfo() {
-        if(!isWin()) this.aGui.println(this.aPlayer.getCurrentRoom().getLongDescription(this.aPlayer));
+        if (!isWin())
+            this.aGui.println(this.aPlayer.getCurrentRoom().getLongDescription(this.aPlayer));
         if (this.aPlayer.getCurrentRoom().getImgName() != null)
             this.aGui.showImage(this.aPlayer.getCurrentRoom().getImgName());
     }
@@ -506,6 +513,9 @@ public class GameEngine {
         return false;
     }
 
+    /**
+     * @return true si le joueur a gagne, false sinon
+     */
     private boolean isWin() {
         boolean vIsOutside = this.aPlayer.getCurrentRoom().getImgName().equals("entrance.jpg");
         boolean vHasCat = this.aPlayer.hasItem("cat");
