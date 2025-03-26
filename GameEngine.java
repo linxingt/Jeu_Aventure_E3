@@ -577,7 +577,7 @@ public class GameEngine {
             if (!(vIndex >= 0 && vIndex < RoomRandomizer.CNB_ROOMS))
                 this.aGui
                         .println("The index of the room must be between 0 and " + (RoomRandomizer.CNB_ROOMS - 1) + ".");
-            vRoom.setIndexRoom(vIndex);
+            else vRoom.setIndexRoom(vIndex);
         } else {
             vRoom.setIndexRoom(null);
         }
